@@ -1,7 +1,7 @@
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/utils/color.dart';
-
+int deneme;
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
