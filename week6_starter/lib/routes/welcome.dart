@@ -22,7 +22,7 @@ class _WelcomeState extends State<Welcome> {
                 padding: Dimen.regularPadding,
                 child: RichText(
                   text: TextSpan(
-                    text: "Welcome to project",
+                    text: "Welcome to the",
                     style: kHeadingTextStyle,
                     children: <TextSpan>[
                       TextSpan(
