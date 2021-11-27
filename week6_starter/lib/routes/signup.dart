@@ -14,9 +14,9 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
         title: Text(
           'SIGNUP',
-          style: kAppBarTitleTextStyle,
+          style: blogText,
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.whiteBlue,
         centerTitle: true,
         elevation: 0.0,
       ),

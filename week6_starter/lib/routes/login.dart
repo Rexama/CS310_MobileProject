@@ -29,13 +29,14 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text(
           'LOGIN',
-          style: kAppBarTitleTextStyle,
+          style: blogText,
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.darkBlue,
         centerTitle: true,
         elevation: 0.0,
       ),
       body: Padding(
+
         padding: Dimen.regularPadding,
         child: SingleChildScrollView(
           child: Form(
@@ -43,6 +44,7 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(height: 264,),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -50,15 +52,11 @@ class _LoginState extends State<Login> {
                       flex: 1,
                       child: TextFormField(
                         decoration: InputDecoration(
-                          fillColor: AppColors.secondary,
+                          fillColor: AppColors.darkestBlue,
                           filled: true,
                           hintText: 'E-mail',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: AppColors.primary,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
+                          hintStyle: TextStyle(color: AppColors.openBlue,),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.midBlue),),
                         ),
                         keyboardType: TextInputType.emailAddress,
 
@@ -93,16 +91,15 @@ class _LoginState extends State<Login> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
+                        style: (TextStyle(color: AppColors.whiteBlue)),
                         decoration: InputDecoration(
-                          fillColor: AppColors.secondary,
+                          fillColor: AppColors.darkestBlue,
                           filled: true,
                           hintText: 'Password',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: AppColors.primary,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
+                          hintStyle: TextStyle(color: AppColors.openBlue),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.openBlue),),
+
+
                         ),
                         keyboardType: TextInputType.text,
                         obscureText: true,
@@ -136,10 +133,9 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 16,),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: OutlinedButton(
+                       OutlinedButton(
                         onPressed: () {
                           if(_formKey.currentState!.validate()) {
                             print('Mail: '+mail+"\nPass: "+pass);
@@ -153,15 +149,15 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Text(
-                            'Login Attempt: ${count!=null ? count:0}',
-                            style: kButtonDarkTextStyle,
+                            'Login ',//Attempt: ${count!=null ? count:0}',
+                            style: blogText,
+
                           ),
                         ),
                         style: OutlinedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppColors.midBlue,
                         ),
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -169,6 +165,7 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
+      backgroundColor: AppColors.darkestBlue,
     );
   }
 }
