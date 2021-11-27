@@ -1,28 +1,48 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:week6_starter/utils/color.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-final kHeadingTextStyle = TextStyle(
-  color: AppColors.headingColor,
-  fontWeight: FontWeight.w900,
-  fontSize: 30.0,
-  letterSpacing: -0.7,
-);
-
-final kButtonLightTextStyle = TextStyle(
-  color: AppColors.textColor,
+final newsTextBoldDark = GoogleFonts.robotoSlab(
+  color: AppColors.darkestBlue,
   fontSize: 20.0,
-  letterSpacing: -0.7,
+  fontWeight: FontWeight.bold,
 );
 
-final kButtonDarkTextStyle = TextStyle(
-  color: Colors.white,
+final newsTextDark = GoogleFonts.robotoSlab(
+  color: AppColors.darkestBlue,
   fontSize: 20.0,
-  letterSpacing: -0.7,
 );
 
-final kAppBarTitleTextStyle = TextStyle(
-  color: Colors.white,
-  fontSize: 24.0,
-  fontWeight: FontWeight.w600,
-  letterSpacing: -0.7,
+final newsText = GoogleFonts.robotoSlab(
+  color: AppColors.whiteBlue,
+  fontSize: 20.0,
+);
+
+final newsTextBold = GoogleFonts.robotoSlab(
+  color: AppColors.whiteBlue,
+  fontSize: 20.0,
+  fontWeight: FontWeight.bold,
+);
+
+final blogTextDark = GoogleFonts.nunito(
+  color: AppColors.darkestBlue,
+  fontSize: 20.0,
+);
+
+final blogText = GoogleFonts.nunito(
+  color: AppColors.whiteBlue,
+  fontSize: 20.0,
+);
+
+final blogTextBold = GoogleFonts.nunito(
+  color: AppColors.whiteBlue,
+  fontSize: 20.0,
+  fontWeight: FontWeight.bold,
+);
+
+
+final blogTextBoldDark = GoogleFonts.nunito(
+  color: AppColors.darkestBlue,
+  fontSize: 20.0,
+  fontWeight:  FontWeight.bold,
 );
