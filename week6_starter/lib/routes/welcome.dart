@@ -1,95 +1,116 @@
+import 'package:flutter/cupertino.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/styles.dart';
 
-class Welcome extends StatefulWidget {
-  @override
-  _WelcomeState createState() => _WelcomeState();
-}
+class Welcome extends StatelessWidget {
+  const Welcome({Key? key}) : super(key: key);
 
-class _WelcomeState extends State<Welcome> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        maintainBottomViewPadding: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Padding(
-                padding: Dimen.regularPadding,
-                child: RichText(
-                  text: TextSpan(
-                    text: "Welcome to the",
-                    style: kHeadingTextStyle,
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: "CS310App",
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.red,
-                          decorationThickness: 2.0,
-                          decorationStyle: TextDecorationStyle.dashed,
-                        ),
-                      ),
-                    ],
-                  ),
+      body: Container(
+        color:Colors.black,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.45,
+                child: Image.network(
+                    'https://i.pinimg.com/564x/62/c2/30/62c230e25c6239c33d2954641b9f5467.jpg',
+                    fit: BoxFit.contain,
                 ),
               ),
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Image.network('https://images-na.ssl-images-amazon.com/images/I/417MahKs6fL.png'),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget> [
+
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                      'Welcome!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 45,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height:17),
+
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    'The best of news all in one place. Trusted sources and personalized news for you.',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Text(
-                          'Signup',
-                          style: kButtonLightTextStyle,
-                        ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget> [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Container(
+                      height: 50,
+                      width: 320,
+
+                      // margin: EdgeInsets.symmetric(horizontal: 50),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: Color(0xFF464646)
                       ),
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: Center(
+                          child: Text("Sign Up", style: TextStyle(fontSize: 18,color: Color(0xFFcccccf), fontWeight: FontWeight.bold),),
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(height: 20),
 
-                  SizedBox(width: 8.0,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Container(
+                      height: 50,
+                      width: 320,
 
-                  Expanded(
-                    flex: 1,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/login');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Text(
-                          'Login',
-                          style: kButtonDarkTextStyle,
+                      // margin: EdgeInsets.symmetric(horizontal: 50),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        gradient: LinearGradient(
+                            colors: [
+                              Color(0xFFffb421),
+                              Color(0xFFff7521)
+                            ]
                         ),
                       ),
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        child: Center(
+                          child: Text("Login", style: TextStyle(fontSize: 18,color:Colors.white, fontWeight: FontWeight.bold),),
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(height: 150),
                 ],
-              ),
             ),
           ],
         ),
