@@ -150,7 +150,23 @@ class Welcome extends StatelessWidget {
 
                   )
                 ),
-                SizedBox(height: 150),
+                SizedBox(height: 8),
+
+                FadeInUp(
+                  delay: Duration(milliseconds: 700),
+                  duration: Duration(milliseconds: 1000),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Center(
+                      child: Text(
+                        'Continue without login', //Attempt: ${count!=null ? count:0}',
+                        style: TextStyle(color: Colors.white,fontSize: 15),
+                      ),
+                    ),
+                  )
+
+                ),
+                SizedBox(height: 100),
               ],
             ),
           ],
