@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -37,9 +38,8 @@ class Welcome extends StatelessWidget {
                     duration: Duration(milliseconds: 1000),
                     child: Text(
                       'Welcome!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
+                        style: GoogleFonts.nunito(
+                        color: AppColors.whiteBlue,
                         fontWeight: FontWeight.bold,
                         fontSize: 45,
                       ),
@@ -56,18 +56,19 @@ class Welcome extends StatelessWidget {
                     duration: Duration(milliseconds: 1000),
                     child: Text(
                       'The best of news all in one place. Trusted sources and personalized news for you.',
-                      style: TextStyle(
+                      style: GoogleFonts.nunito(
                         color: Colors.white70,
-                        fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                         fontSize: 17,
                       ),
                     ),
                   ),
                 ),
+                SizedBox(height: 40,),
               ],
             ),
             Column(
+
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget> [
@@ -98,12 +99,18 @@ class Welcome extends StatelessWidget {
                           Navigator.pushNamed(context, '/signup');
                         },
                         child: Center(
-                          child: Text("Sign Up", style: TextStyle(fontSize: 18,color:Colors.white, fontWeight: FontWeight.bold),),
+                          child:
+                            Text("Sign Up", style: GoogleFonts.nunito(
+                              color: AppColors.whiteBlue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                     ),
                   ),
-                ),
                 SizedBox(height: 20),
 
                 FadeInUp(
@@ -121,10 +128,7 @@ class Welcome extends StatelessWidget {
                         gradient: LinearGradient(
                             colors: [
                               Color(0xFFffc971),
-                              //Color(0xFFf58a07),
-
-                              //Color(0xFFffd000),
-                              Color(0xFFff8800),
+                              Color(0xbfff8800),
                             ]
                         ),
                       ),
@@ -133,11 +137,18 @@ class Welcome extends StatelessWidget {
                           Navigator.pushNamed(context, '/login');
                         },
                         child: Center(
-                          child: Text("Login", style: TextStyle(fontSize: 18,color:Colors.white, fontWeight: FontWeight.bold),),
+                          child: Text("Login",
+                            style: GoogleFonts.nunito(
+                              color: AppColors.whiteBlue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+
+                  )
                 ),
                 SizedBox(height: 150),
               ],
