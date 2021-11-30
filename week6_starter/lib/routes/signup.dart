@@ -283,12 +283,12 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     FloatingActionButton.extended(
                       onPressed: () {},
-                      /*icon: Image.asset( // didnt work?
+                      icon: Image.asset( // didnt work?
                         'assets/Google__G__Logo.svg.png',
-                        height: 4,
-                        width: 4,
-                      ),*/
-                      icon: Icon(Icons.security),
+                        height: 18,
+                        width: 18,
+                      ),
+                      //icon: Icon(Icons.security),
                       label: Text('Sign up with Google'),
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
