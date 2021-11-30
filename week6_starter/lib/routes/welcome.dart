@@ -33,7 +33,7 @@ class Welcome extends StatelessWidget {
                 Padding(padding: const EdgeInsets.symmetric(horizontal: 30),
                   child:
                   FadeInUp(
-                    delay: Duration(milliseconds: 500),
+                    delay: Duration(milliseconds: 300),
                     duration: Duration(milliseconds: 1000),
                     child: Text(
                       'Welcome!',
@@ -52,7 +52,7 @@ class Welcome extends StatelessWidget {
                 Padding(padding: const EdgeInsets.symmetric(horizontal: 30),
                   child:
                   FadeInUp(
-                    delay: Duration(milliseconds: 600),
+                    delay: Duration(milliseconds: 400),
                     duration: Duration(milliseconds: 1000),
                     child: Text(
                       'The best of news all in one place. Trusted sources and personalized news for you.',
@@ -72,7 +72,7 @@ class Welcome extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget> [
                 FadeInUp(
-                  delay: Duration(milliseconds: 700),
+                  delay: Duration(milliseconds: 500),
                   duration: Duration(milliseconds: 1000),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -107,7 +107,7 @@ class Welcome extends StatelessWidget {
                 SizedBox(height: 20),
 
                 FadeInUp(
-                  delay: Duration(milliseconds: 800),
+                  delay: Duration(milliseconds: 600),
                   duration: Duration(milliseconds: 1000),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35),
