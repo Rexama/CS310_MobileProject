@@ -64,6 +64,7 @@ class _SignUpState extends State<SignUp> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,
@@ -108,6 +109,7 @@ class _SignUpState extends State<SignUp> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,

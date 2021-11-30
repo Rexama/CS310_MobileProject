@@ -62,6 +62,7 @@ class _LoginState extends State<Login> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,
@@ -184,7 +185,7 @@ class _LoginState extends State<Login> {
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Text(
                           '   Forgot Password?   ', //Attempt: ${count!=null ? count:0}',
-                          style: blogText,
+                          style: TextStyle(color: AppColors.openBlue,fontSize: 15,fontStyle: FontStyle.normal),
 
                         ),
                       ),
