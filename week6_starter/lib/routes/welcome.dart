@@ -19,7 +19,7 @@ class Welcome extends StatelessWidget {
           children: [
             Positioned.fill(
               child: Opacity(
-                opacity: 0.45,
+                opacity: 0.31,
                 child: Image.network(
                   'https://i.pinimg.com/564x/62/c2/30/62c230e25c6239c33d2954641b9f5467.jpg',
                   fit: BoxFit.contain,
@@ -64,7 +64,7 @@ class Welcome extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 40,),
+                SizedBox(height: 60,),
               ],
             ),
             Column(
@@ -166,7 +166,7 @@ class Welcome extends StatelessWidget {
                   )
 
                 ),
-                SizedBox(height: 100),
+                SizedBox(height: 70),
               ],
             ),
           ],

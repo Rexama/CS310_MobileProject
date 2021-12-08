@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "798303082575",
+    "project_id": "cs310-newsapp",
+    "storage_bucket": "cs310-newsapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798303082575:android:c78c3c6ed8ce1dad92323a",
+        "android_client_info": {
+          "package_name": "com.example.week6_starter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798303082575-00dbip2tnofaomteiiuvbfvcc309ngbq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3fzilGO0yD9XB6-S9j40qZ1TfkiOKFno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798303082575-00dbip2tnofaomteiiuvbfvcc309ngbq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
