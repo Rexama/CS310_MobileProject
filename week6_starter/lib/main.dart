@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/routes/login.dart';
@@ -50,15 +52,20 @@ class _MyFirebaseAppState extends State<MyFirebaseApp> {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
 
+    return MaterialApp(
+      navigatorObservers: <NavigatorObserver>[observer],
       routes: {
-        '/': (context) => Walkthrough(),
-        '/welcome': (context) => Welcome(),
-        '/login': (context) => Login(),
-        '/signup': (context) => SignUp(),
+        '/': (context) => Walkthrough(analytics: analytics, observer: observer),
+        '/welcome': (context) => Welcome(analytics: analytics, observer: observer),
+        '/login': (context) => Login(analytics: analytics, observer: observer),
+        '/signup': (context) => SignUp(analytics: analytics, observer: observer),
       },
     );
   }
