@@ -1,10 +1,14 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import './signup.dart';
+
+
 
 class Login extends StatefulWidget {
   @override
@@ -15,18 +19,61 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _formKey = GlobalKey<FormState>();
-
+  String _message = "";
   String mail = "";
   String pass = "";
   late int count;
+  final _formKey = GlobalKey<FormState>();
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  void setMessage(String msg){
+    setState(() {
+      _message = msg;
+    });
+  }
+
+
+  Future <void> loginUser() async{
+    try {
+      UserCredential userCredential = await auth
+          .signInWithEmailAndPassword(
+          email: mail,
+          password: pass
+      );
+      print(userCredential.toString());
+
+    } on FirebaseAuthException catch(e){
+      print(e.toString());
+
+      if (e.code == 'user-not-found')
+      {
+        setMessage('User not found');
+      }
+      else if (e.code == 'wrong-password')
+      {
+        setMessage('Please check your password');
+      }
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    auth.authStateChanges().listen((User? user) {
+      if(user == null){
+        print('User is signed out');
+      }
+      else{
+        print('User is signed out');
+      }
+
+    });
     count = 0;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +211,7 @@ class _LoginState extends State<Login> {
                           _formKey.currentState!.save();
                           print('Mail: ' + mail + "\nPass: " + pass);
                           setState(() {
-                            count += 1;
+                          count += 1;
                           });
                         }
                       },
@@ -177,7 +224,7 @@ class _LoginState extends State<Login> {
                       ),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: AppColors.midBlue,
-                      ),
+                        ),
                     ),
                   ],
                 ),
@@ -190,14 +237,23 @@ class _LoginState extends State<Login> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Text(
-                          '   Forgot Password?   ', //Attempt: ${count!=null ? count:0}',
-                          style: TextStyle(color: AppColors.openBlue,fontSize: 15,fontStyle: FontStyle.normal),
+                          '   Forgot Password?   ',
+                          //Attempt: ${count!=null ? count:0}',
+                          style: TextStyle(color: AppColors.openBlue,
+                              fontSize: 15,
+                              fontStyle: FontStyle.normal),
 
                         ),
                       ),
-                    )
+                    ),
                   ],
-                )
+                ),
+                Text(
+                  _message,
+                  style: TextStyle(
+                      color: AppColors.whiteBlue
+                  ),
+                ),
               ],
             ),
           ),
@@ -207,3 +263,4 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
