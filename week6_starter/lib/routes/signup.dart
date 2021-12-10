@@ -6,6 +6,7 @@ import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -34,6 +35,7 @@ class _SignUpState extends State<SignUp> {
       _message = msg;
     });
   }
+
   Future <void> signupUser() async{
     try{
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -321,12 +323,15 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 16,
                 ),
-                Row(
+               /* Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton.extended(
-                      onPressed: () {},
+                      onPressed: () {
+                        var a = signInWithGoogle();
+                        print("zaxd\n" + a.toString());
+                      },
                       icon: Image.asset( // didnt work?
                         'assets/Google__G__Logo.svg.png',
                         height: 18,
@@ -338,7 +343,7 @@ class _SignUpState extends State<SignUp> {
                       foregroundColor: Colors.black,
                     ),
                   ],
-                ),
+                ),*/
                 Text(_message,
                   style: TextStyle(
                       color: AppColors.whiteBlue

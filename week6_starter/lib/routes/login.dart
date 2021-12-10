@@ -6,9 +6,7 @@ import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import './signup.dart';
-
-
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -26,6 +24,23 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
 
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   void setMessage(String msg){
     setState(() {
@@ -245,6 +260,27 @@ class _LoginState extends State<Login> {
 
                         ),
                       ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        var a = signInWithGoogle();
+                        print("***GOOGLE SIGNIN CREDENTIALS:***\n" + a.toString());
+                      },
+                      icon: Image.asset( // didnt work?
+                        'assets/Google__G__Logo.svg.png',
+                        height: 18,
+                        width: 18,
+                      ),
+                      //icon: Icon(Icons.security),
+                      label: Text('Login with Google'),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
                     ),
                   ],
                 ),
