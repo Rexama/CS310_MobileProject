@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
@@ -27,7 +28,8 @@ class _SignUpState extends State<SignUp> {
   String username = "";
   late int count;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
+  AuthService auth = AuthService();
+  //FirebaseAuth auth = FirebaseAuth.instance;
 
   void setmessage(String msg) {
     setState(() {
@@ -36,12 +38,10 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> signupUser() async {
-    try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: mail,
-        password: pass,
-      );
-      print(userCredential.toString());
+    var res = auth.signupWithMailAndPass(mail, pass);
+
+    if(res != null && res != "1" && res != "2")
+    {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -60,14 +60,17 @@ class _SignUpState extends State<SignUp> {
               ],
             );
           });
-    } on FirebaseAuthException catch (e) {
-      print("*******signup catch:********" + e.toString());
-      if (e.code == 'email-already-in-use') {
-        setmessage("This email is already in use");
-      } else if (e.code == 'weak-password') {
-        setmessage("Weak password"); //burayi biraktim
-      }
     }
+    else if(res == "1") {
+      setmessage("This email is already in use");
+    }
+    else if(res == "2"){
+      setmessage("Weak password");
+    }
+    else{
+      setmessage("An error has occurred");
+    }
+
   }
 
   @override
