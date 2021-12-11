@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
@@ -10,55 +11,64 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUp extends StatefulWidget {
   @override
-  const SignUp({Key? key, required this.analytics, required this.observer}) : super(key: key);
+  const SignUp({Key? key, required this.analytics, required this.observer})
+      : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   _SignUpState createState() => _SignUpState();
-
 }
-
-
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   String _message = "";
   String mail = "";
   String pass = "";
-  String tempPass = "";//password confirm icin gerekli kurcalama
+  String tempPass = ""; //password confirm icin gerekli kurcalama
   String username = "";
   late int count;
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  void setmessage(String msg){
+  void setmessage(String msg) {
     setState(() {
       _message = msg;
     });
   }
 
-  Future <void> signupUser() async{
-    try{
+  Future<void> signupUser() async {
+    try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-          email: mail,
-          password: pass,
+        email: mail,
+        password: pass,
       );
       print(userCredential.toString());
-    } on FirebaseAuthException catch(e)
-    {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Sign Up Successful"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )
+              ],
+            );
+          });
+    } on FirebaseAuthException catch (e) {
       print("*******signup catch:********" + e.toString());
-      if(e.code == 'email-already-in-use')
-      {
+      if (e.code == 'email-already-in-use') {
         setmessage("This email is already in use");
-      }
-      else if(e.code == 'weak-password')
-      {
-        setmessage("Weak password");  //burayi biraktim
+      } else if (e.code == 'weak-password') {
+        setmessage("Weak password"); //burayi biraktim
       }
     }
-
   }
-
-
 
   @override
   void initState() {
@@ -226,10 +236,10 @@ class _SignUpState extends State<SignUp> {
                               flag = false;
                               return 'Password must be at least 8 characters long';
                             }
-                            if(flag)
-                              {
-                                tempPass = value;//this is for to check confirm pass field
-                              }
+                            if (flag) {
+                              tempPass =
+                                  value; //this is for to check confirm pass field
+                            }
                           }
                           return null;
                         },
@@ -268,7 +278,7 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value != tempPass) {
                             return 'Passwords must match.';
-                          }/* else { //from login
+                          } /* else { //from login
                             String trimmedValue = value.trim();
                             if (trimmedValue.isEmpty) {
                               return 'Password field cannot be empty';
@@ -298,9 +308,19 @@ class _SignUpState extends State<SignUp> {
                     OutlinedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print('Mail: ' + mail + "\nUsername: " + username + "\nPass: " + pass);
+                          print('Mail: ' +
+                              mail +
+                              "\nUsername: " +
+                              username +
+                              "\nPass: " +
+                              pass);
                           _formKey.currentState!.save();
-                          print('Mail: ' + mail + "\nUsername: " + username + "\nPass: " + pass);
+                          print('Mail: ' +
+                              mail +
+                              "\nUsername: " +
+                              username +
+                              "\nPass: " +
+                              pass);
                           signupUser();
                           setState(() {
                             count += 1;
@@ -323,7 +343,7 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 16,
                 ),
-               /* Row(
+                /* Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -344,10 +364,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),*/
-                Text(_message,
-                  style: TextStyle(
-                      color: AppColors.whiteBlue
-                  ),
+                Text(
+                  _message,
+                  style: TextStyle(color: AppColors.whiteBlue),
                 ),
               ],
             ),
