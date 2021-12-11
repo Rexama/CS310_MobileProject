@@ -1,10 +1,12 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -12,15 +14,51 @@ class SignUp extends StatefulWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   _SignUpState createState() => _SignUpState();
+
 }
+
+
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  String _message = "";
   String mail = "";
   String pass = "";
-  String tempPass = "";
+  String tempPass = "";//password confirm icin gerekli kurcalama
   String username = "";
   late int count;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  void setmessage(String msg){
+    setState(() {
+      _message = msg;
+    });
+  }
+
+  Future <void> signupUser() async{
+    try{
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: mail,
+          password: pass,
+      );
+      print(userCredential.toString());
+    } on FirebaseAuthException catch(e)
+    {
+      print("*******signup catch:********" + e.toString());
+      if(e.code == 'email-already-in-use')
+      {
+        setmessage("This email is already in use");
+      }
+      else if(e.code == 'weak-password')
+      {
+        setmessage("Weak password");  //burayi biraktim
+      }
+    }
+
+  }
+
+
 
   @override
   void initState() {
@@ -263,6 +301,7 @@ class _SignUpState extends State<SignUp> {
                           print('Mail: ' + mail + "\nUsername: " + username + "\nPass: " + pass);
                           _formKey.currentState!.save();
                           print('Mail: ' + mail + "\nUsername: " + username + "\nPass: " + pass);
+                          signupUser();
                           setState(() {
                             count += 1;
                           });
@@ -284,12 +323,15 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 16,
                 ),
-                Row(
+               /* Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton.extended(
-                      onPressed: () {},
+                      onPressed: () {
+                        var a = signInWithGoogle();
+                        print("zaxd\n" + a.toString());
+                      },
                       icon: Image.asset( // didnt work?
                         'assets/Google__G__Logo.svg.png',
                         height: 18,
@@ -301,7 +343,12 @@ class _SignUpState extends State<SignUp> {
                       foregroundColor: Colors.black,
                     ),
                   ],
-                )
+                ),*/
+                Text(_message,
+                  style: TextStyle(
+                      color: AppColors.whiteBlue
+                  ),
+                ),
               ],
             ),
           ),
