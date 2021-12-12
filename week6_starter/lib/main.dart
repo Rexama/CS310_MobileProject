@@ -73,9 +73,9 @@ class MyApp extends StatelessWidget {
         navigatorObservers: <NavigatorObserver>[observer],
         routes: {
           '/': (context) =>
-              Walkthrough(analytics: analytics, observer: observer),
-          '/welcome': (context) =>
               Welcome(analytics: analytics, observer: observer),
+          '/walkthrough': (context) =>
+              Walkthrough(analytics: analytics, observer: observer),
           '/login': (context) =>
               Login(analytics: analytics, observer: observer),
           '/signup': (context) =>

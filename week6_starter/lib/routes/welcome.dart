@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,10 +32,21 @@ class _WelcomeState extends State<Welcome>{
     var res = auth.signInAnon();
   }
 
+  OpenWalkthrough() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? firstTime = prefs.getBool('first_time');
+
+    if (firstTime == null) { // first time
+      return Navigator.pushNamed(context, '/walkthrough');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final user = Provider.of<User?>(context);//this listens for user changes
+
+    OpenWalkthrough();
 
     if (user == null)
     {

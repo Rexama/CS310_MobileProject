@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
@@ -20,6 +21,11 @@ class _WalkthroughState extends State<Walkthrough> {
   int currentPage = 0;
   int lastPage = 2;
 
+  _firstLaunch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('first_time', false);
+  }
+
   void nextPage() {
     if (currentPage < lastPage) {
       setState(() {
@@ -27,8 +33,9 @@ class _WalkthroughState extends State<Walkthrough> {
       });
     }
     else {
+      _firstLaunch();
       setLogEvent(this.widget.analytics, 'walkthrough_end', true);
-      Navigator.pushNamed(context, '/welcome');
+      Navigator.pop(context);
     }
   }
 
