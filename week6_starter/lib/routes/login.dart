@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
@@ -207,6 +208,7 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       OutlinedButton(
                         onPressed: () {
+                          setLogEvent(this.widget.analytics, 'signup', _formKey.currentState!.validate());
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             print('Mail: ' + mail + "\nPass: " + pass);
@@ -286,7 +288,8 @@ class _LoginState extends State<Login> {
     }
     else {
       //show feed view
-      return FeedView();
+      Navigator.pushNamed(context, '/feed');
+      return widget;  //dummy return
       /*return Scaffold(//dummy feedview
         appBar: AppBar(
           title: Text("User is logged in"),
