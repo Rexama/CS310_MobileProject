@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _WalkthroughState extends State<Walkthrough> {
       });
     }
     else {
+      setLogEvent(this.widget.analytics, 'walkthrough_end', true);
       Navigator.pushNamed(context, '/welcome');
     }
   }

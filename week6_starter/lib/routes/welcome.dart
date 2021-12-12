@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:animate_do/animate_do.dart';
-
 import 'package:week6_starter/routes/feedView.dart';
 
 class Welcome extends StatefulWidget {
@@ -205,7 +204,8 @@ class _WelcomeState extends State<Welcome>{
     }
     else {
       //show feed screen
-      return FeedView();
+      Navigator.pushNamed(context, '/feed');
+      return widget;  //dummy return
       /*return Scaffold(
         appBar: AppBar(
           title: Text("User is logged in"),

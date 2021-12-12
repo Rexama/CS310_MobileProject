@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -312,6 +313,7 @@ class _SignUpState extends State<SignUp> {
                   children: <Widget>[
                     OutlinedButton(
                       onPressed: () {
+                        setLogEvent(this.widget.analytics, 'signup', _formKey.currentState!.validate());
                         if (_formKey.currentState!.validate()) {
                           print('Mail: ' +
                               mail +

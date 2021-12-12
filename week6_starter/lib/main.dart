@@ -8,6 +8,7 @@ import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/routes/login.dart';
 import 'package:week6_starter/routes/signup.dart';
 import 'package:week6_starter/routes/walkthrough.dart';
+import 'package:week6_starter/routes/feedView.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:developer';
 
@@ -79,6 +80,8 @@ class MyApp extends StatelessWidget {
               Login(analytics: analytics, observer: observer),
           '/signup': (context) =>
               SignUp(analytics: analytics, observer: observer),
+          '/feed': (context) =>
+              FeedView(analytics: analytics, observer: observer),
         },
       ),
     );
