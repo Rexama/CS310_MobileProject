@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
           '/signup': (context) =>
               SignUp(analytics: analytics, observer: observer),
           '/feed': (context) =>
-              FeedView(),
+              FeedView(analytics: analytics, observer: observer),
         },
       ),
     );
