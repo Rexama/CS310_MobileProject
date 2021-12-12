@@ -283,7 +283,7 @@ class _LoginState extends State<Login> {
       );
     } else {
       //show feed view
-      return FeedView();
+      return FeedView(analytics: widget.analytics, observer: widget.observer);
 
       /*return Scaffold(//dummy feedview
         appBar: AppBar(

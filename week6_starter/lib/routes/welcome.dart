@@ -216,7 +216,7 @@ class _WelcomeState extends State<Welcome>{
     }
     else {
       //show feed screen
-      return FeedView();
+      return FeedView(analytics: widget.analytics, observer: widget.observer);
       /*return Scaffold(
         appBar: AppBar(
           title: Text("User is logged in"),
