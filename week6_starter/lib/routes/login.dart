@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -13,7 +14,8 @@ import 'package:week6_starter/routes/feedView.dart';
 
 class Login extends StatefulWidget {
   @override
-  const Login({Key? key, required this.analytics, required this.observer}) : super(key: key);
+  const Login({Key? key, required this.analytics, required this.observer})
+      : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   _LoginState createState() => _LoginState();
@@ -29,32 +31,28 @@ class _LoginState extends State<Login> {
   AuthService auth = AuthService();
   //FirebaseAuth auth = FirebaseAuth.instance;
 
-  void setMessage(String msg){
+  void setMessage(String msg) {
     setState(() {
       _message = msg;
     });
   }
 
-  Future <void> loginUser() async{
+  Future<void> loginUser() async {
     var res = auth.loginWithMailAndPass(mail, pass);
 
-    if(res != null && res != "3")//successful
+    if (res != null && res != "3") //successful
     {
       print(res.toString());
-    }
-    else if(res == "3") {
+    } else if (res == "3") {
       setMessage("Please check your e-mail and password");
-    }
-    else{
+    } else {
       setMessage("An error has occurred");
     }
-
   }
 
-  Future <void> logoutUser() async{
+  Future<void> logoutUser() async {
     var res = auth.signOut();
   }
-
 
   @override
   void initState() {
@@ -72,12 +70,12 @@ class _LoginState extends State<Login> {
     count = 0;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
 
-    if(user == null) {
+    if (user == null) {
+      //FirebaseCrashlytics.instance.crash();
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -240,10 +238,10 @@ class _LoginState extends State<Login> {
                           child: Text(
                             '   Forgot Password?   ',
                             //Attempt: ${count!=null ? count:0}',
-                            style: TextStyle(color: AppColors.openBlue,
+                            style: TextStyle(
+                                color: AppColors.openBlue,
                                 fontSize: 15,
                                 fontStyle: FontStyle.normal),
-
                           ),
                         ),
                       ),
@@ -257,7 +255,8 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           auth.signInWithGoogle();
                         },
-                        icon: Image.asset( // didnt work?
+                        icon: Image.asset(
+                          // didnt work?
                           'assets/Google__G__Logo.svg.png',
                           height: 18,
                           width: 18,
@@ -271,9 +270,7 @@ class _LoginState extends State<Login> {
                   ),
                   Text(
                     _message,
-                    style: TextStyle(
-                        color: AppColors.whiteBlue
-                    ),
+                    style: TextStyle(color: AppColors.whiteBlue),
                   ),
                 ],
               ),
@@ -282,9 +279,7 @@ class _LoginState extends State<Login> {
         ),
         backgroundColor: AppColors.darkestBlue,
       );
-
-    }
-    else {
+    } else {
       //show feed view
       return FeedView();
       /*return Scaffold(//dummy feedview
@@ -315,7 +310,5 @@ class _LoginState extends State<Login> {
       );*/
       //return FeedView();
     }
-
   }
 }
-
