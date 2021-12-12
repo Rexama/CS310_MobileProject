@@ -204,8 +204,7 @@ class _WelcomeState extends State<Welcome>{
     }
     else {
       //show feed screen
-      Navigator.pushNamed(context, '/feed');
-      return widget;  //dummy return
+      return FeedView();
       /*return Scaffold(
         appBar: AppBar(
           title: Text("User is logged in"),

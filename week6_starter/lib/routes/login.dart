@@ -206,7 +206,7 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       OutlinedButton(
                         onPressed: () {
-                          setLogEvent(this.widget.analytics, 'signup', _formKey.currentState!.validate());
+                          setLogEvent(widget.analytics, 'signup', _formKey.currentState!.validate());
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             print('Mail: ' + mail + "\nPass: " + pass);
@@ -283,8 +283,8 @@ class _LoginState extends State<Login> {
       );
     } else {
       //show feed view
-      Navigator.pushNamed(context, '/feed');
-      return widget;  //dummy return
+      return FeedView();
+
       /*return Scaffold(//dummy feedview
         appBar: AppBar(
           title: Text("User is logged in"),
