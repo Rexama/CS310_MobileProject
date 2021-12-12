@@ -59,10 +59,15 @@ class AuthService {
       print(user.toString());
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
-      if(e.code == 'user-not-found') {
+      print(e.code.toString());
+      if(e.code.toString() == 'user-not-found' || e.code.toString() == 'wrong-password') {
         //signupWithMailAndPass(mail, pass);
         return("3");
       }
+      else if(e.code.toString() == 'too-many-requests')
+        {
+          return("4");
+        }
     } catch (e) {
       print(e.toString());
       return null;

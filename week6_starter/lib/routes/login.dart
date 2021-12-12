@@ -23,7 +23,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _message = "";
+  String _message = "a";
   String mail = "";
   String pass = "";
   late int count;
@@ -39,11 +39,12 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> loginUser() async {
-    var res = auth.loginWithMailAndPass(mail, pass);
+    var res = await auth.loginWithMailAndPass(mail, pass);
 
-    if (res != null && res != "3") //successful
+    print("res print:" + res.toString());
+    if (res != null && res != "3" && res!= "4") //successful
     {
-      print(res.toString());
+      print("OK res print:" + res.toString());
     } else if (res == "3") {
       setMessage("Please check your e-mail and password");
     } else {
@@ -270,6 +271,7 @@ class _LoginState extends State<Login> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 8),
                   Text(
                     _message,
                     style: TextStyle(color: AppColors.whiteBlue),
