@@ -184,7 +184,7 @@ class _WelcomeState extends State<Welcome>{
                       duration: Duration(milliseconds: 1000),
                       child: TextButton(
                         onPressed: () {
-                          //loginAnon();
+                          loginAnon();
                         },
                         child: Center(
                           child: Text(

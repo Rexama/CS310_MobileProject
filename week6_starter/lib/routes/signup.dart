@@ -3,6 +3,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:week6_starter/services/auth.dart';
+import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
@@ -29,6 +30,7 @@ class _SignUpState extends State<SignUp> {
   late int count;
 
   AuthService auth = AuthService();
+  DBService db = DBService();
   //FirebaseAuth auth = FirebaseAuth.instance;
 
   void setmessage(String msg) {
@@ -39,7 +41,7 @@ class _SignUpState extends State<SignUp> {
 
   Future<void> signupUser() async {
     var res = auth.signupWithMailAndPass(mail, pass);
-
+    db.addUserAutoID(username, mail, 'token');
     if(res != null && res != "1" && res != "2")
     {
       showDialog(

@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'db.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  DBService db = DBService();
 
   User? _userFromFirebase(User? user) {//
     return user ?? null;
