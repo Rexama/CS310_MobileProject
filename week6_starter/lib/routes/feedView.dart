@@ -29,6 +29,14 @@ class _FeedView extends State<FeedView> {
           },
           icon: Icon(Icons.logout),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/search');
+            },
+            icon: const Icon(Icons.search),
+          )
+        ],
       ),
       body: Center(
         child: Text(
