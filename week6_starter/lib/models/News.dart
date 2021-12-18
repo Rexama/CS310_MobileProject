@@ -3,7 +3,7 @@ class News {
   late String subtitle;
   late String content;
   late String? image;
-  late List<String>? category;
+  late List<String> category;
   late List<String> suggestions;
   late List<String> comments;
   late int numLike;
@@ -28,9 +28,9 @@ class News {
         subtitle = json['subtitle'],
         content = json['content'],
         image = json['imageUrl'],
-        category = json['category'],
-        suggestions = json['suggestions'],
-        comments = json['comments'],
+        category = List<String>.from(json['category'].map((i) => i.toString())),
+        suggestions = List<String>.from(json['suggestions'].map((i) => i.toString())),
+        comments = List<String>.from(json['comments'].map((i) => i.toString())),
         numLike = json['numLike'],
         numDislike = json['numDislike'];
 

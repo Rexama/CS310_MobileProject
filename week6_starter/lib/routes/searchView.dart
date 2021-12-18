@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/models/News.dart';
 import 'package:week6_starter/services/auth.dart';
+import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
@@ -80,17 +81,24 @@ class _SearchView extends State<SearchView> {
   }
 
   getFilteredNews(String keyword) {
-    for (News news in allNews) {
-      if (_isContentSelected && news.content.contains(keyword)) {
-        results.add(news);
+    setState(() {
+      results.clear();
+      for (News news in allNews) {
+        if (_isContentSelected && keyword.isNotEmpty && news.content.contains(keyword)) {
+          results.add(news);
+        }
+        else if (_isTagSelected && keyword.isNotEmpty) {
+          for (String category in news.category) {
+            if (category.contains(keyword)) {
+              results.add(news);
+            }
+          }
+        }
+        else if (_isTitleSelected && keyword.isNotEmpty && news.title.contains(keyword)) {
+          results.add(news);
+        }
       }
-      if (_isTagSelected && news.category.contains(keyword)) {
-        results.add(news);
-      }
-      if (_isTitleSelected && news.title.contains(keyword)) {
-        results.add(news);
-      }
-    }
+    });
   }
 
   @override
@@ -128,8 +136,10 @@ class _SearchView extends State<SearchView> {
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: () => setState(
-                            () => _isTitleSelected = !_isTitleSelected),
+                        onPressed: () {
+                          setState(() => _isTitleSelected = !_isTitleSelected);
+                          getFilteredNews(_filter.text);
+                        },
                         child: Text(
                           'title',
                           style: _isTitleSelected ? newsText : newsTextDark,
@@ -147,8 +157,10 @@ class _SearchView extends State<SearchView> {
                         width: 30,
                       ),
                       ElevatedButton(
-                        onPressed: () =>
-                            setState(() => _isTagSelected = !_isTagSelected),
+                        onPressed: () {
+                            setState(() => _isTagSelected = !_isTagSelected);
+                            getFilteredNews(_filter.text);
+                        },
                         child: Text(
                           'tag',
                           style: _isTagSelected ? newsText : newsTextDark,
@@ -166,8 +178,10 @@ class _SearchView extends State<SearchView> {
                         width: 30,
                       ),
                       ElevatedButton(
-                        onPressed: () => setState(
-                            () => _isContentSelected = !_isContentSelected),
+                        onPressed: () {
+                          setState(() => _isContentSelected = !_isContentSelected);
+                          getFilteredNews(_filter.text);
+                        },
                         child: Text(
                           'content',
                           style: _isContentSelected ? newsText : newsTextDark,
@@ -189,7 +203,7 @@ class _SearchView extends State<SearchView> {
                 height: 20,
               ),
               Expanded(
-                child: results == null
+                child: results.isEmpty
                     ? Container()
                     : ListView.builder(
                         itemCount: results.length,
@@ -201,10 +215,28 @@ class _SearchView extends State<SearchView> {
                                 results[index].title,
                                 style: newsTextBoldDark,
                               ),
-                              subtitle: Text(
-                                results[index].subtitle,
-                                style: GoogleFonts.robotoSlab(
-                                    color: AppColors.darkBlue, fontSize: 15),
+                              subtitle: Column(
+                                children: [
+                                  Text(
+                                    results[index].subtitle,
+                                    textAlign: TextAlign.left,
+                                    style: GoogleFonts.robotoSlab(
+                                        color: AppColors.darkBlue, fontSize: 15),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Icon(Icons.thumb_up, color: Colors.green,),
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Icon(Icons.thumb_down, color: Colors.red,),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
                               isThreeLine: true,
                             ),
