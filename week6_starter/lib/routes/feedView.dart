@@ -2,6 +2,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/services/auth.dart';
+import 'package:week6_starter/services/db.dart';
+import 'package:week6_starter/utils/color.dart';
 
 class FeedView extends StatefulWidget {
   @override
@@ -15,11 +17,16 @@ class FeedView extends StatefulWidget {
 class _FeedView extends State<FeedView> {
 
   AuthService auth = AuthService();
+  DBService db = DBService();
+
+  int currentIndex = 0;
+  final screens = [
+
+  ];
 
   @override
   Widget build(BuildContext context) {
-
-
+    db.addUserAutoID('username', 'mail', 'token', 'name');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -47,6 +54,37 @@ class _FeedView extends State<FeedView> {
             color: Colors.lightBlue,
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.white,
+        unselectedItemColor: AppColors.openBlue,
+        showUnselectedLabels: false,
+        iconSize: 35,
+        currentIndex: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: AppColors.darkestBlue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.border_color_rounded),
+            label: 'Blog',
+            backgroundColor: AppColors.darkestBlue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Explore',
+            backgroundColor: AppColors.darkestBlue,
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+            backgroundColor: AppColors.darkestBlue,
+          ),
+        ],
       ),
     );
   }
