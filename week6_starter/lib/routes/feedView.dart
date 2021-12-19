@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
+import 'package:week6_starter/routes/navigation.dart';
 
 class FeedView extends StatefulWidget {
   @override
@@ -20,9 +21,7 @@ class _FeedView extends State<FeedView> {
   DBService db = DBService();
 
   int currentIndex = 0;
-  final screens = [
 
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +29,7 @@ class _FeedView extends State<FeedView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: AppColors.darkBlue,
         leading: IconButton(
           onPressed: () {
             auth.signOut();
@@ -55,13 +55,15 @@ class _FeedView extends State<FeedView> {
           ),
         ),
       ),
+
+      /*
+
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.white,
         unselectedItemColor: AppColors.openBlue,
         showUnselectedLabels: false,
         iconSize: 35,
         currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -86,6 +88,8 @@ class _FeedView extends State<FeedView> {
           ),
         ],
       ),
+
+       */
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:week6_starter/routes/feedView.dart';
+import 'package:week6_starter/routes/navigation.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -285,7 +286,7 @@ class _LoginState extends State<Login> {
       );
     } else {
       //show feed view
-      return FeedView(analytics: widget.analytics, observer: widget.observer);
+      return Home(analytics: widget.analytics, observer: widget.observer);
 
       /*return Scaffold(//dummy feedview
         appBar: AppBar(

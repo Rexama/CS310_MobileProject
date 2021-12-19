@@ -12,6 +12,8 @@ import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:week6_starter/routes/feedView.dart';
+import 'package:week6_starter/routes/navigation.dart';
+
 
 class Welcome extends StatefulWidget {
 
@@ -216,7 +218,7 @@ class _WelcomeState extends State<Welcome>{
     }
     else {
       //show feed screen
-      return FeedView(analytics: widget.analytics, observer: widget.observer);
+      return Home(analytics: widget.analytics, observer: widget.observer);
       /*return Scaffold(
         appBar: AppBar(
           title: Text("User is logged in"),
