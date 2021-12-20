@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Blog {
   late String title;
   late String content;
@@ -20,7 +22,7 @@ class Blog {
 
   Blog.fromJson(Map<String, dynamic> json)
       : title = json['title'],
-        uploadDate = json['date'],
+        uploadDate = (json['date'] as Timestamp).toDate(),
         content = json['content'],
         comments = json['comments'],
         image = json['imageUrl'],

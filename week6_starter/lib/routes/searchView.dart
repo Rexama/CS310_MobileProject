@@ -130,6 +130,10 @@ class _SearchView extends State<SearchView> {
           results.sort((a, b) {
             return a.comments.length.compareTo(b.comments.length);
           });
+        } else if (orderBy.substring(0, orderBy.length - 4) == 'Date') {
+          results.sort((a, b) {
+            return a.uploadDate.compareTo(b.uploadDate);
+          });
         }
 
         if (orderBy.substring(orderBy.length - 4) == 'Ascc') {
@@ -374,6 +378,46 @@ class _SearchView extends State<SearchView> {
                 ),
                 leading: Radio(
                   value: 'CommentAscc',
+                  groupValue: orderBy,
+                  onChanged: (value) {
+                    setState(() {
+                      orderBy = value as String;
+                    });
+                    getFilteredNews(_filter.text);
+                  },
+                  activeColor: AppColors.darkBlue,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Date ↓",
+                  style: GoogleFonts.robotoSlab(
+                    color: AppColors.darkestBlue,
+                    fontSize: 17.5,
+                  ),
+                ),
+                leading: Radio(
+                  value: 'DateDesc',
+                  groupValue: orderBy,
+                  onChanged: (value) {
+                    setState(() {
+                      orderBy = value as String;
+                    });
+                    getFilteredNews(_filter.text);
+                  },
+                  activeColor: AppColors.darkBlue,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Date ↑",
+                  style: GoogleFonts.robotoSlab(
+                    color: AppColors.darkestBlue,
+                    fontSize: 17.5,
+                  ),
+                ),
+                leading: Radio(
+                  value: 'DateAscc',
                   groupValue: orderBy,
                   onChanged: (value) {
                     setState(() {
