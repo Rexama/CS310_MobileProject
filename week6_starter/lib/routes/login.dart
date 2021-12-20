@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:week6_starter/routes/feedView.dart';
-import 'package:week6_starter/routes/navigation.dart';
+import 'package:week6_starter/routes/navigationBar.dart';
 
 class Login extends StatefulWidget {
   @override

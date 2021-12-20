@@ -12,7 +12,7 @@ import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:week6_starter/routes/feedView.dart';
-import 'package:week6_starter/routes/navigation.dart';
+import 'package:week6_starter/routes/navigationBar.dart';
 
 
 class Welcome extends StatefulWidget {
