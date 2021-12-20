@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
-import 'package:week6_starter/routes/navigation.dart';
+//import 'package:week6_starter/routes/navigation.dart';
 
 class FeedView extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _FeedView extends State<FeedView> {
 
   @override
   Widget build(BuildContext context) {
-    db.addUserAutoID('username', 'mail', 'token', 'name');
+    db.addUserAutoID('username', 'mail', 'token');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
