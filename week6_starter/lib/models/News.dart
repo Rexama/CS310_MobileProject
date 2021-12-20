@@ -42,7 +42,8 @@ class News {
         image = json['image'],
         uploadDate = (json['createdOn'] as Timestamp).toDate(),
         category = List<String>.from(json['category'].map((i) => i.toString())),
-        suggestions = List<String>.from(json['suggestions'].map((i) => i.toString())),
+        suggestions =
+            List<String>.from(json['suggestions'].map((i) => i.toString())),
         comments = List<String>.from(json['comments'].map((i) => i.toString())),
         numLike = json['numLike'],
         numDislike = json['numDislike'];
@@ -57,5 +58,6 @@ class News {
         'comments': comments,
         'numLike': numLike,
         'numDislike': numDislike,
+        'createdOn': uploadDate,
       };
 }

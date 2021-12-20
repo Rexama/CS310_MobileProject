@@ -21,9 +21,8 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchView extends State<SearchView> {
-  AuthService auth = AuthService();
-
-  final firestoreInstance = FirebaseFirestore.instance;
+  final AuthService auth = AuthService();
+  final DBService db = DBService();
 
   bool _isTitleSelected = false;
   bool _isContentSelected = false;
@@ -32,11 +31,11 @@ class _SearchView extends State<SearchView> {
   String orderBy = '';
 
   final TextEditingController _filter = new TextEditingController();
+  Icon _searchIcon = new Icon(Icons.search);
+  Widget _appBarTitle = new Text('');
 
   List<News> results = []; //filtered news
   List<News> allNews = []; //unfiltered news (all data from db)
-  Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text('');
 
   void _searchPressed() {
     setState(() {
@@ -70,29 +69,20 @@ class _SearchView extends State<SearchView> {
   void initState() {
     super.initState();
 
-    getNews();
-  }
-
-  Future<Null> getNews() async {
-    firestoreInstance.collection("news").get().then((querySnapshot) {
-      querySnapshot.docs.forEach((result) {
-        News tempNew = News.fromJson(result.data());
-        allNews.add(tempNew);
-      });
-    });
+    db.getNews(allNews);
   }
 
   getFilteredNews(String keyword) {
     setState(() {
-
       results.clear();
       for (News news in allNews) {
         if (_isContentSelected &&
             keyword.isNotEmpty &&
-            news.content.toLowerCase().contains(keyword.toLowerCase())&& !results.contains(news)) {
+            news.content.toLowerCase().contains(keyword.toLowerCase()) &&
+            !results.contains(news)) {
           results.add(news);
         }
-        if (_isTagSelected && keyword.isNotEmpty&& !results.contains(news)) {
+        if (_isTagSelected && keyword.isNotEmpty && !results.contains(news)) {
           for (String category in news.category) {
             if (category.contains(keyword.toLowerCase())) {
               results.add(news);
@@ -102,45 +92,18 @@ class _SearchView extends State<SearchView> {
         }
         if (_isTitleSelected &&
             keyword.isNotEmpty &&
-            news.title.toLowerCase().contains(keyword.toLowerCase())&&
+            news.title.toLowerCase().contains(keyword.toLowerCase()) &&
             !results.contains(news)) {
           results.add(news);
         }
       }
       if (orderBy != '') {
-        if (orderBy.substring(0, orderBy.length - 4) == 'Title') {
-          results.sort((a, b) {
-            return a.title
-                .toString()
-                .toLowerCase()
-                .compareTo(b.title.toString().toLowerCase());
-          });
-        } else if (orderBy.substring(0, orderBy.length - 4) == 'Subtitle') {
-          results.sort((a, b) {
-            return a.subtitle
-                .toString()
-                .toLowerCase()
-                .compareTo(b.subtitle.toString().toLowerCase());
-          });
-        } else if (orderBy.substring(0, orderBy.length - 4) == 'Like') {
-          results.sort((a, b) {
-            return a.numLike.compareTo(b.numLike);
-          });
-        } else if (orderBy.substring(0, orderBy.length - 4) == 'Dislike') {
-          results.sort((a, b) {
-            return a.numDislike.compareTo(b.numDislike);
-          });
-        } else if (orderBy.substring(0, orderBy.length - 4) == 'Comment') {
-          results.sort((a, b) {
-            return a.comments.length.compareTo(b.comments.length);
-          });
-        } else if (orderBy.substring(0, orderBy.length - 4) == 'Date') {
-          results.sort((a, b) {
-            return a.uploadDate.compareTo(b.uploadDate);
-          });
-        }
-
-        if (orderBy.substring(orderBy.length - 4) == 'Ascc') {
+        results.sort((a, b) {
+          return a
+              .toJson()[orderBy.substring(0, orderBy.length - 4)]
+              .compareTo(b.toJson()[orderBy.substring(0, orderBy.length - 4)]);
+        });
+        if (orderBy.substring(orderBy.length - 4) == 'Desc') {
           results = results.reversed.toList();
         }
       }
@@ -190,246 +153,16 @@ class _SearchView extends State<SearchView> {
                   ),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  "Title - Alphabetical ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'TitleDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Title - Alphabetical ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'TitleAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Subtitle - Alphabetical ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'SubtitleDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Subtitle - Alphabetical ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'SubtitleAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Like Count ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'LikeDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Like Count ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'LikeAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Dislike Count ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'DislikeDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Dislike Count ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'DislikeAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Comment Count ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'CommentDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Comment Count ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'CommentAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Date ↓",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'DateDesc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Date ↑",
-                  style: GoogleFonts.robotoSlab(
-                    color: AppColors.darkestBlue,
-                    fontSize: 17.5,
-                  ),
-                ),
-                leading: Radio(
-                  value: 'DateAscc',
-                  groupValue: orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      orderBy = value as String;
-                    });
-                    getFilteredNews(_filter.text);
-                  },
-                  activeColor: AppColors.darkBlue,
-                ),
-              ),
+              RadioListElement('Title - Alphabetical ↓', 'titleAscc'),
+              RadioListElement('Title - Alphabetical ↑', 'titleDesc'),
+              RadioListElement('Subtitle - Alphabetical ↓', 'subtitleAscc'),
+              RadioListElement('Subtitle - Alphabetical ↑', 'subtitleDesc'),
+              RadioListElement('Like Count ↓', 'numLikeDesc'),
+              RadioListElement('Like Count ↑', 'numLikeAscc'),
+              RadioListElement('Dislike Count ↓', 'numDislikeDesc'),
+              RadioListElement('Dislike Count ↑', 'numDislikeAscc'),
+              RadioListElement('Newest', 'createdOnDesc'),
+              RadioListElement('Oldest', 'createdOnAscc'),
             ],
           ),
         ),
@@ -491,7 +224,7 @@ class _SearchView extends State<SearchView> {
                       ElevatedButton(
                         onPressed: () {
                           setState(
-                                  () => _isContentSelected = !_isContentSelected);
+                              () => _isContentSelected = !_isContentSelected);
                           getFilteredNews(_filter.text);
                         },
                         child: Text(
@@ -518,117 +251,140 @@ class _SearchView extends State<SearchView> {
                 child: results.isEmpty
                     ? Container()
                     : ListView.builder(
-                  itemCount: results.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 200,
-                      child: Card(
-                        child: Container(
-                          height: 200,
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Center(
-                                child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: results[index].image == null
-                                        ? Icon(
-                                      Icons.image_not_supported,
-                                      size: 75,
-                                    )
-                                        : Image.network(
-                                      results[index].image
-                                      as String,
-                                      width: 75,
-                                      height: 75,
-                                    )),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          results[index].title.length > 20
-                                              ? results[index]
-                                              .title
-                                              .substring(0, 18) +
-                                              '..'
-                                              : results[index].title,
-                                          style: newsTextBoldDark,
-                                        ),
-                                        subtitle: Text(
-                                          results[index].subtitle.length >
-                                              125
-                                              ? results[index]
-                                              .subtitle
-                                              .substring(0, 122) +
-                                              '...'
-                                              : results[index].subtitle,
-                                          style: GoogleFonts.robotoSlab(
-                                            color: AppColors.darkestBlue,
-                                            fontSize: 15.0,
-                                          ),
+                        itemCount: results.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            height: 200,
+                            child: Card(
+                              child: Container(
+                                height: 200,
+                                color: Colors.white,
+                                child: Row(
+                                  children: [
+                                    Center(
+                                      child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: results[index].image == null
+                                              ? Icon(
+                                                  Icons.image_not_supported,
+                                                  size: 75,
+                                                )
+                                              : Image.network(
+                                                  results[index].image
+                                                      as String,
+                                                  width: 75,
+                                                  height: 75,
+                                                )),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.topLeft,
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              title: Text(
+                                                results[index].title.length > 20
+                                                    ? results[index]
+                                                            .title
+                                                            .substring(0, 18) +
+                                                        '..'
+                                                    : results[index].title,
+                                                style: newsTextBoldDark,
+                                              ),
+                                              subtitle: Text(
+                                                results[index].subtitle.length >
+                                                        125
+                                                    ? results[index]
+                                                            .subtitle
+                                                            .substring(0, 122) +
+                                                        '...'
+                                                    : results[index].subtitle,
+                                                style: GoogleFonts.robotoSlab(
+                                                  color: AppColors.darkestBlue,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Icon(
+                                                  Icons.thumb_up,
+                                                  color: Color(0xff1b6609),
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Text(
+                                                  results[index]
+                                                      .numLike
+                                                      .toString(),
+                                                  style: GoogleFonts.robotoSlab(
+                                                    color: AppColors.darkBlue,
+                                                    fontSize: 15.0,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Icon(
+                                                  Icons.thumb_down,
+                                                  color: Color(0xff7d060a),
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Text(
+                                                  results[index]
+                                                      .numDislike
+                                                      .toString(),
+                                                  style: GoogleFonts.robotoSlab(
+                                                    color: AppColors.darkBlue,
+                                                    fontSize: 15.0,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.end,
-                                        children: [
-                                          Icon(
-                                            Icons.thumb_up,
-                                            color: Color(0xff1b6609),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            results[index]
-                                                .numLike
-                                                .toString(),
-                                            style: GoogleFonts.robotoSlab(
-                                              color: AppColors.darkBlue,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Icon(
-                                            Icons.thumb_down,
-                                            color: Color(0xff7d060a),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            results[index]
-                                                .numDislike
-                                                .toString(),
-                                            style: GoogleFonts.robotoSlab(
-                                              color: AppColors.darkBlue,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        elevation: 8,
-                        margin: EdgeInsets.all(10),
+                              elevation: 8,
+                              margin: EdgeInsets.all(10),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
         ));
+  }
+
+  ListTile RadioListElement(String title, String value) {
+    return ListTile(
+      title: Text(
+        title,
+        style: GoogleFonts.robotoSlab(
+          color: AppColors.darkestBlue,
+          fontSize: 17.5,
+        ),
+      ),
+      leading: Radio(
+        value: value,
+        groupValue: orderBy,
+        onChanged: (value) {
+          setState(() {
+            orderBy = value as String;
+          });
+          getFilteredNews(_filter.text);
+        },
+        activeColor: AppColors.darkBlue,
+      ),
+    );
   }
 }

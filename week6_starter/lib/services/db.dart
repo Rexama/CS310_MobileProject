@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:week6_starter/models/News.dart';
 
 class DBService {
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
     userCollection.add({
@@ -19,6 +21,15 @@ class DBService {
       'surname': surname,
       'userToken': token,
       'email': mail
+    });
+  }
+
+  Future getNews(List<News> allNews) async {
+    firestoreInstance.collection("news").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        News tempNew = News.fromJson(result.data());
+        allNews.add(tempNew);
+      });
     });
   }
 }
