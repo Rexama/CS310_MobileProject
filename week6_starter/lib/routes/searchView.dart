@@ -84,22 +84,26 @@ class _SearchView extends State<SearchView> {
 
   getFilteredNews(String keyword) {
     setState(() {
+
       results.clear();
       for (News news in allNews) {
         if (_isContentSelected &&
             keyword.isNotEmpty &&
-            news.content.contains(keyword)) {
+            news.content.toLowerCase().contains(keyword.toLowerCase())&& !results.contains(news)) {
           results.add(news);
-        } else if (_isTagSelected && keyword.isNotEmpty) {
+        }
+        if (_isTagSelected && keyword.isNotEmpty&& !results.contains(news)) {
           for (String category in news.category) {
-            if (category.contains(keyword)) {
+            if (category.contains(keyword.toLowerCase())) {
               results.add(news);
               break;
             }
           }
-        } else if (_isTitleSelected &&
+        }
+        if (_isTitleSelected &&
             keyword.isNotEmpty &&
-            news.title.contains(keyword)) {
+            news.title.toLowerCase().contains(keyword.toLowerCase())&&
+            !results.contains(news)) {
           results.add(news);
         }
       }
@@ -141,8 +145,6 @@ class _SearchView extends State<SearchView> {
         }
       }
     });
-    print("s");
-    print(results[0].image.toString());
   }
 
   @override
