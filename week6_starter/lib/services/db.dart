@@ -31,5 +31,6 @@ class DBService {
         allNews.add(tempNew);
       });
     });
+    return allNews;
   }
 }
