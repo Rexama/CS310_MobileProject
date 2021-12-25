@@ -15,6 +15,7 @@ import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/routes/editProfilePicture.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({Key? key}) : super(key: key);
@@ -25,16 +26,19 @@ class EditProfileView extends StatefulWidget {
 
 class _EditProfileViewState extends State<EditProfileView> {
 
+  late String _username;
+  late String _mail;
+  late String _bio;
+  final _formKey = GlobalKey<FormState>();
+
   AuthService auth = AuthService();
   DBService db = DBService();
+
 
   @override
   Widget build(BuildContext context) {
 
     final user = Provider.of<User?>(context);
-    //List<String> myList = [];
-
-    //Users myUser = Users('lulu', true, false, 'https://www.meme-arsenal.com/memes/bb537b6f1ce1c63f139d786960ddeb72.jpg', 'bio', 0, myList , 'userToken', 'lulu@alpaca.com', 0, 0, 0, 0, 0);
 
     print('user id: ${user!.uid}');
 
@@ -49,6 +53,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               padding: EdgeInsets.symmetric(horizontal: 30),
               physics: BouncingScrollPhysics(),
               children: [
+                SizedBox(height: 50),
                 ProfileWidget(
                   imagePath: userClass.image,
                   isEdit: true,
@@ -62,21 +67,56 @@ class _EditProfileViewState extends State<EditProfileView> {
                 TextFieldWidget(
                   label: 'Username:',
                   text: userClass.userName,
-                  onChanged:(userName) {},
+                  onChanged:(value) {
+                    setState(() {
+                      _username = value;
+                    });
+                  },
                 ),
                 const SizedBox(height: 24),
                 TextFieldWidget(
                   label: 'Email:',
                   text: userClass.email,
-                  onChanged:(email) {},
+                  onChanged:(value) {
+                    _mail = value;
+                  },
                 ),
                 const SizedBox(height: 24),
                 TextFieldWidget(
                   label: 'Bio:',
                   text: userClass.userBio!,
                   maxLines: 5,
-                  onChanged:(userBio) {},
+                  onChanged:(value) {
+                    _bio = value;
+                  },
                 ),
+                const SizedBox(height: 25),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.midBlue,
+                  ),
+                  child: Text("Save"),
+                  onPressed: (){
+                    if(_username != null){
+                      db.updateName(_username, userClass.userToken);
+                    };
+                    if(_bio != null){
+                      db.updateBio(_bio, userClass.userToken);
+                    };
+                    if(_mail != null){
+                      db.updateBio(_mail, userClass.userToken);
+                    };
+                  }
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: Center(
+                    child: Text(
+                      'Change Password',
+                      style: TextStyle(color: AppColors.darkBlue, fontSize: 15),
+                    ),
+                  ),
+                )
               ],
             ),
           );

@@ -53,8 +53,7 @@ class _EditPictureState extends State<EditPicture> {
               width: 150,
               height: 150,
               fit: BoxFit.cover,
-
-            ) : FlutterLogo(size:100),
+            ):
             const SizedBox(height: 24),
             Text(
               'Change Profile Picture',

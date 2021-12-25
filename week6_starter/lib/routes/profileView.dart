@@ -66,13 +66,94 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 SizedBox(height: 20),
                 buildName(userClass),
+                SizedBox(height: 30),
                 Expanded(child: Divider(
+                  indent: 3,
+                  endIndent: 3,
+                  thickness: 2,
                   color: AppColors.darkBlue,
                 )),
                 buildBio(userClass),
                 Expanded(child: Divider(
+                  indent: 3,
+                  endIndent: 3,
+                  thickness: 2,
                   color: AppColors.darkBlue,
                 )),
+
+                const SizedBox(height: 30),
+                Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.midBlue,
+                            ),
+                            child: OutlinedButton(
+                              onPressed: () async {},
+                              child: Center(
+                                child:
+                                Text("Favourites", style: GoogleFonts.nunito(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.midBlue,
+                            ),
+                            child: OutlinedButton(
+                              onPressed: () async {},
+                              child: Center(
+                                child:
+                                Text("My Posts", style: GoogleFonts.nunito(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.midBlue,
+                            ),
+                            child: OutlinedButton(
+                              onPressed: () async {},
+                              child: Center(
+                                child:
+                                Text("Read Counts", style: GoogleFonts.nunito(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
               ],
             ),
           );
