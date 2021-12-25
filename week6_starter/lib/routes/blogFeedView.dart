@@ -10,12 +10,14 @@ import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
+import 'package:week6_starter/routes/blogView.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:developer';
 
 class BlogFeedView extends StatefulWidget {
   @override
-  const BlogFeedView({Key? key, required this.analytics, required this.observer})
+  const BlogFeedView(
+      {Key? key, required this.analytics, required this.observer})
       : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -23,7 +25,6 @@ class BlogFeedView extends StatefulWidget {
 }
 
 class _BlogFeedView extends State<BlogFeedView> {
-
   AuthService auth = AuthService();
   DBService db = DBService();
   List<Blog> allBlogs = [];
@@ -38,7 +39,7 @@ class _BlogFeedView extends State<BlogFeedView> {
         this.allBlogs = allBlogs;
       });
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState((){}));
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
     super.initState();
   }
 
@@ -65,105 +66,117 @@ class _BlogFeedView extends State<BlogFeedView> {
         ),
         body: Padding(
           padding: Dimen.regularPadding,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: allBlogs.isEmpty
-                      ? Container()
-                      : ListView.builder(
-                    itemCount: allBlogs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 170,
-                        child: Card(
-                          child: Container(
-                            height: 170,
-                            color: Colors.white10,
-                            child: Row(
-                              children: [
-                                Center(
-                                  child: Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: allBlogs[index].image == null
-                                          ? Icon(
-                                        Icons.image_not_supported,
-                                        size: 75,
-                                      )
-                                          : Image.network(
-                                        allBlogs[index].image
-                                        as String,
-                                        width: 75,
-                                        height: 75,
-                                      )),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Expanded(
+              child: allBlogs.isEmpty
+                  ? Container()
+                  : ListView.builder(
+                      itemCount: allBlogs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BlogView(content: allBlogs[index]),
                                 ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        ListTile(
-                                          title: Text(
-                                            allBlogs[index].title.length > 20
-                                                ? allBlogs[index]
-                                                .title
-                                                .substring(0, 18) +
-                                                '..'
-                                                : allBlogs[index].title,
-                                            style: newsTextBoldDark,
-                                          ),
-
-                                          subtitle: Text(
-                                            allBlogs[index].content.length >
-                                                125
-                                                ? allBlogs[index]
-                                                .content
-                                                .substring(0, 80) +
-                                                '...'
-                                                : allBlogs[index].content,
-                                            style: GoogleFonts.robotoSlab(
-                                              color: AppColors.darkestBlue,
-                                              fontSize: 15.0,
-                                            ),
-
-                                          ),
-
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.end,
-                                          children: [
-                                           Text(
-                                               DateFormat().format(allBlogs[index].uploadDate)
-                                               .toString(),
-                                                style: GoogleFonts.robotoSlab(
-                                                color: AppColors.darkBlue,
-                                                fontSize: 12.0,
+                              );
+                            },
+                            child: Container(
+                              height: 170,
+                              child: Card(
+                                child: Container(
+                                  height: 170,
+                                  color: Colors.white10,
+                                  child: Row(
+                                    children: [
+                                      Center(
+                                        child: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: allBlogs[index].image == null
+                                                ? Icon(
+                                                    Icons.image_not_supported,
+                                                    size: 75,
+                                                  )
+                                                : Image.network(
+                                                    allBlogs[index].image
+                                                        as String,
+                                                    width: 75,
+                                                    height: 75,
+                                                  )),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.topLeft,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 5,
                                               ),
-                                            ),
-                                          ],
+                                              ListTile(
+                                                title: Text(
+                                                  allBlogs[index].title.length >
+                                                          20
+                                                      ? allBlogs[index]
+                                                              .title
+                                                              .substring(
+                                                                  0, 18) +
+                                                          '..'
+                                                      : allBlogs[index].title,
+                                                  style: newsTextBoldDark,
+                                                ),
+                                                subtitle: Text(
+                                                  allBlogs[index]
+                                                              .content
+                                                              .length >
+                                                          125
+                                                      ? allBlogs[index]
+                                                              .content
+                                                              .substring(
+                                                                  0, 80) +
+                                                          '...'
+                                                      : allBlogs[index].content,
+                                                  style: GoogleFonts.robotoSlab(
+                                                    color:
+                                                        AppColors.darkestBlue,
+                                                    fontSize: 15.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    DateFormat()
+                                                        .format(allBlogs[index]
+                                                            .uploadDate)
+                                                        .toString(),
+                                                    style:
+                                                        GoogleFonts.robotoSlab(
+                                                      color: AppColors.darkBlue,
+                                                      fontSize: 12.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          elevation: 10,
-                          margin: EdgeInsets.fromLTRB(0,0,5,5),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ]
-          ),
-        )
-    );
+                                elevation: 10,
+                                margin: EdgeInsets.fromLTRB(0, 0, 5, 5),
+                              ),
+                            ));
+                      },
+                    ),
+            )
+          ]),
+        ));
   }
 }

@@ -45,7 +45,7 @@ class _MyFirebaseAppState extends State<MyFirebaseApp> {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           //if we are connected
-          log("conected");
+          log("connected");
           if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
             log("crashlytics is set");
           }
@@ -74,8 +74,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         navigatorObservers: <NavigatorObserver>[observer],
         routes: {
-          '/': (context) =>
-              Welcome(analytics: analytics, observer: observer),
+          '/': (context) => Welcome(analytics: analytics, observer: observer),
           '/walkthrough': (context) =>
               Walkthrough(analytics: analytics, observer: observer),
           '/login': (context) =>
