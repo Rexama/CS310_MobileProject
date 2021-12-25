@@ -9,10 +9,10 @@ class Blog {
   late List<String>? comments;
   late String userId;
 
-  Blog(String title, DateTime date, String content, String image,
+  Blog(String title, DateTime uploadDate, String content, String image,
       List<String> category, List<String> comments, String userId) {
     this.title = title;
-    this.uploadDate = date;
+    this.uploadDate = uploadDate;
     this.content = content;
     this.category = category;
     this.comments = comments;
@@ -22,16 +22,16 @@ class Blog {
 
   Blog.fromJson(Map<String, dynamic> json)
       : title = json['title'],
-        uploadDate = (json['date'] as Timestamp).toDate(),
+        uploadDate = (json['uploadDate'] as Timestamp).toDate(),
         content = json['content'],
-        comments = json['comments'],
+        comments = List<String>.from(json['comments'].map((i) => i.toString())),
         image = json['imageUrl'],
-        category = json['category'],
+        category =  List<String>.from(json['category'].map((i) => i.toString())),
         userId = json['userId'];
 
   Map<String, dynamic> toJson() => {
     'title': title,
-    'date': uploadDate,
+    'uploadDate': uploadDate,
     'content': content,
     'comments': comments,
     'imageUrl': image,

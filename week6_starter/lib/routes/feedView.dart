@@ -50,7 +50,6 @@ class _FeedView extends State<FeedView> {
 
   @override
   Widget build(BuildContext context) {
-    db.addUserAutoID('username', 'mail', 'token');
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(

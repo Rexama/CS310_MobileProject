@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
+import 'package:week6_starter/routes/blogFeedView.dart';
 import 'package:week6_starter/routes/profileView.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
@@ -37,7 +38,7 @@ class _HomeState extends State<Home> {
     _currentIndex = 0;
     _children = [
       FeedView(analytics: widget.analytics, observer: widget.observer),
-      Center(child: Text("blog")),
+      BlogFeedView(analytics: widget.analytics, observer: widget.observer),
       Center(child: Text("explore")),
       ProfileView(analytics: widget.analytics, observer: widget.observer),
     ];

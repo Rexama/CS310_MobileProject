@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:week6_starter/models/Blog.dart';
 import 'package:week6_starter/models/News.dart';
+
 
 class DBService {
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
@@ -32,5 +34,14 @@ class DBService {
       });
     });
     return allNews;
+  }
+
+  Future getBlogs(List<Blog> allBlogs) async {
+    firestoreInstance.collection("blog").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        Blog tempBlog = Blog.fromJson(result.data());
+        allBlogs.add(tempBlog);
+      });
+    });
   }
 }
