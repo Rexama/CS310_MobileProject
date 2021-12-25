@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/services/auth.dart';
@@ -11,7 +13,7 @@ import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/routes/editProfileView.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ProfileView extends StatefulWidget {
@@ -19,6 +21,7 @@ class ProfileView extends StatefulWidget {
       : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
+
 
   @override
   _ProfileViewState createState() => _ProfileViewState();
@@ -32,34 +35,50 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
 
-  Widget build(BuildContext context) {
-    List<String> myList = [];
-    Users myUser = Users('lulu', true, false, 'https://www.meme-arsenal.com/memes/bb537b6f1ce1c63f139d786960ddeb72.jpg', 'bio', 0, myList , 'userToken', 'lulu@alpaca.com', 0, 0, 0, 0, 0);
 
-    return Scaffold(
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: [
-          SizedBox(height: 30),
-          ProfileWidget(
-            imagePath: myUser.image,
-            onClicked: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EditProfileView()),
-              );
-            }
-          ),
-          SizedBox(height: 20),
-          buildName(myUser),
-          Expanded(child: Divider(
-            color: AppColors.darkBlue,
-          )),
-          buildBio(myUser),
-          Expanded(child: Divider(
-            color: AppColors.darkBlue,
-          )),
-        ],
-      ),
+  Widget build(BuildContext context) {
+
+    final user = Provider.of<User?>(context);
+
+    print('user id: ${user!.uid}');
+    return FutureBuilder(
+      future: db.userCollection.doc(user.uid).get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+        if(snapshot.connectionState == ConnectionState.done)
+          {
+            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+          return Scaffold(
+            body: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                SizedBox(height: 30),
+                ProfileWidget(
+                    imagePath: userClass.image,
+                    onClicked: () {
+                      if(user.isAnonymous) {
+                        return;
+                      }else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => EditProfileView()),
+                        );
+                      }
+                    }
+                ),
+                SizedBox(height: 20),
+                buildName(userClass),
+                Expanded(child: Divider(
+                  color: AppColors.darkBlue,
+                )),
+                buildBio(userClass),
+                Expanded(child: Divider(
+                  color: AppColors.darkBlue,
+                )),
+              ],
+            ),
+          );
+          }
+        return CircularProgressIndicator();
+      }
     );
   }
 }
@@ -92,6 +111,13 @@ Widget buildBio(Users myUser){
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          "About:",
+          style: GoogleFonts.nunito(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),
+        ),
         Text(
           myUser.userBio!,
           style: GoogleFonts.nunito(

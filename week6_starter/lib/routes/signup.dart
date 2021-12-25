@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
@@ -28,6 +29,7 @@ class _SignUpState extends State<SignUp> {
   String pass = "";
   String tempPass = ""; //password confirm icin gerekli kurcalama
   String username = "";
+  String name = "";
   late int count;
 
   AuthService auth = AuthService();
@@ -41,8 +43,9 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> signupUser() async {
-    var res = auth.signupWithMailAndPass(mail, pass);
-    db.addUserAutoID(username, mail, 'token');
+    var res = auth.signupWithMailAndPass(username, mail, pass);
+    //db.addUserAutoID(username, mail, 'token');
+
     if(res != null && res != "1" && res != "2")
     {
       showDialog(
@@ -85,6 +88,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User?>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(

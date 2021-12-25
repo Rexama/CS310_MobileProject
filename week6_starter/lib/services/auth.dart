@@ -15,10 +15,13 @@ class AuthService {
     return _auth.authStateChanges().map(_userFromFirebase);
   }
 
+
   Future signInAnon() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user!;
+      db.addUserAutoID("anonymous", "anonymous", user.uid);
+
       print(user.toString());
       return _userFromFirebase(user);
     } catch (e) {
@@ -27,14 +30,16 @@ class AuthService {
     }
   }
 
-  Future signupWithMailAndPass(String mail, String pass) async {
+  Future signupWithMailAndPass(String username, String mail, String pass) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: mail, password: pass);
       User user = result.user!;
+      db.addUserAutoID(username, mail, user.uid);
       print(user.toString());
       return _userFromFirebase(user);
     } on FirebaseAuthException catch(e)
     {
+
       print("*******signup catch:********" + e.toString());
       if(e.code == 'email-already-in-use')
       {
@@ -103,5 +108,22 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+  
+  Future<bool> updatePass(String oldPass, String newPass) async {
+    bool isSuccess = false;
+    final user = _auth.currentUser;
+    final credentials = EmailAuthProvider.credential(email: user!.email!, password: oldPass);
+
+    await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credentials).then((value) async {
+      await user.updatePassword(newPass).then((value) {
+        isSuccess = true;
+      }).catchError((error) {
+        isSuccess = false;
+      });
+    }).catchError((error) {
+      isSuccess = false;
+    });
+    return isSuccess;
   }
 }

@@ -8,21 +8,33 @@ class DBService {
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
-    userCollection.add({
+    List<String> strList = [];
+    userCollection.doc(token).set({
       'username': username,
       'userToken': token,
-      'email': mail
+      'email': mail,
+      'isActive' : true,
+      'isPriv' : false,
+      'image' : "https://www.tutorsvalley.com/public/storage/uploads/tutor/1574383712-1AB5217C-5A13-4888-A5A1-BE0BCADBC655.png",
+      'userBio' : "",
+      'numOfArticles' : 0,
+      'likedNews' : strList,
+      'numScience' : 0,
+      'numFinance' : 0,
+      'numSports' : 0,
+      'numHist' : 0,
+      'numMagazine' : 0,
     })
         .then((value) => print('User added'))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future addUser(String name, String surname, String mail, String token) async {
+  Future addUser(String username, String mail, String token) async {
+
     userCollection.doc(token).set({
-      'name': name,
-      'surname': surname,
+      'username': username,
       'userToken': token,
-      'email': mail
+      'email': mail,
     });
   }
 
@@ -44,4 +56,17 @@ class DBService {
       });
     });
   }
+
+  Future updateName(String username, String token) async {
+    userCollection.doc(token).update({
+      'userName' : username,
+    });
+  }
+  Future updateBio(String userBio, String token) async {
+    userCollection.doc(token).update({
+      'userBio' : userBio,
+    });
+  }
+
+
 }

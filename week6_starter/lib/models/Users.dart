@@ -6,7 +6,7 @@ class Users {
   late String? userBio;
   late String userPw;
   late int numOfArticles;
-  late List<String>? likedNews;
+  late List<dynamic> likedNews;
   late String userToken;
   late String email;
   late int numScience;
@@ -16,7 +16,7 @@ class Users {
   late int numMagazine;
 
   Users( String userName, bool isActive, bool isPriv, String image,
-      String userBio, int numOfArticles, List<String> likedNews, String userToken,
+      String userBio, int numOfArticles, List<dynamic> likedNews, String userToken,
       String email, int numScience, numFinance, int numSports, numHist, numMagazine) {
     this.userName = userName;
     this.isActive = isActive;
