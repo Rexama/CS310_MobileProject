@@ -24,8 +24,6 @@ class TextFieldWidget extends StatefulWidget {
     required this.onChanged,
   }) : super(key: key);
 
-
-
   @override
   _TextFieldWidgetState createState() => _TextFieldWidgetState();
 }
@@ -34,13 +32,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   late final TextEditingController controller;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     controller = TextEditingController(text: widget.text);
   }
 
   @override
-  void dispose(){
+  void dispose() {
     controller.dispose();
     super.dispose();
   }
@@ -58,16 +56,14 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
+        TextFormField(
           controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
           ),
           maxLines: widget.maxLines,
         ),
-
       ],
     );
   }
 }
-

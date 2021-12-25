@@ -69,15 +69,13 @@ class DBService {
     });
   }
 
-  Future updateName(String username, String token) async {
-    userCollection.doc(token).update({
-      'userName': username,
-    });
-  }
-
-  Future updateBio(String userBio, String token) async {
-    userCollection.doc(token).update({
+  Future updateProfile(
+      String username, String userBio, String email, String token) async {
+    firestoreInstance.collection("users").doc(token).update({
+      'username': username,
       'userBio': userBio,
+      'email': email,
     });
+    print("Updated");
   }
 }

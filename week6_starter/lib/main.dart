@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/routes/blogFeedView.dart';
+import 'package:week6_starter/routes/profileView.dart';
 import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/routes/login.dart';
 import 'package:week6_starter/routes/signup.dart';
@@ -87,6 +88,8 @@ class MyApp extends StatelessWidget {
               SearchView(analytics: analytics, observer: observer),
           '/blogFeed': (context) =>
               BlogFeedView(analytics: analytics, observer: observer),
+          '/profileView': (context) =>
+              ProfileView(analytics: analytics, observer: observer),
         },
       ),
     );

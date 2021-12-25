@@ -15,156 +15,155 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/routes/editProfileView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key, required this.analytics, required this.observer})
       : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
-
   @override
   _ProfileViewState createState() => _ProfileViewState();
 }
 
 class _ProfileViewState extends State<ProfileView> {
-
   AuthService auth = AuthService();
   DBService db = DBService();
 
-
   @override
-
-
   Widget build(BuildContext context) {
-
     final user = Provider.of<User?>(context);
 
     print('user id: ${user!.uid}');
     return FutureBuilder(
-      future: db.userCollection.doc(user.uid).get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
-        if(snapshot.connectionState == ConnectionState.done)
-          {
-            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
-          return Scaffold(
-            body: ListView(
-              physics: BouncingScrollPhysics(),
-              children: [
-                SizedBox(height: 30),
-                ProfileWidget(
-                    imagePath: userClass.image,
-                    onClicked: () {
-                      if(user.isAnonymous) {
-                        return;
-                      }else {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => EditProfileView()),
-                        );
-                      }
-                    }
-                ),
-                SizedBox(height: 20),
-                buildName(userClass),
-                SizedBox(height: 30),
-                Expanded(child: Divider(
-                  indent: 3,
-                  endIndent: 3,
-                  thickness: 2,
-                  color: AppColors.darkBlue,
-                )),
-                buildBio(userClass),
-                Expanded(child: Divider(
-                  indent: 3,
-                  endIndent: 3,
-                  thickness: 2,
-                  color: AppColors.darkBlue,
-                )),
-
-                const SizedBox(height: 30),
-                Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColors.midBlue,
-                            ),
-                            child: OutlinedButton(
-                              onPressed: () async {},
-                              child: Center(
-                                child:
-                                Text("Favourites", style: GoogleFonts.nunito(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+        future: db.userCollection.doc(user.uid).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            Users userClass =
+                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            return Scaffold(
+              body: ListView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  SizedBox(height: 30),
+                  ProfileWidget(
+                      imagePath: userClass.image,
+                      onClicked: () {
+                        if (user.isAnonymous) {
+                          return;
+                        } else {
+                          Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfileView()),
+                              )
+                              .then((value) => {setState(() {})});
+                        }
+                      }),
+                  SizedBox(height: 20),
+                  buildName(userClass),
+                  SizedBox(height: 30),
+                  Expanded(
+                      child: Divider(
+                    indent: 3,
+                    endIndent: 3,
+                    thickness: 2,
+                    color: AppColors.darkBlue,
+                  )),
+                  buildBio(userClass),
+                  Expanded(
+                      child: Divider(
+                    indent: 3,
+                    endIndent: 3,
+                    thickness: 2,
+                    color: AppColors.darkBlue,
+                  )),
+                  const SizedBox(height: 30),
+                  Stack(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.midBlue,
+                              ),
+                              child: OutlinedButton(
+                                onPressed: () async {},
+                                child: Center(
+                                  child: Text(
+                                    "Favourites",
+                                    style: GoogleFonts.nunito(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColors.midBlue,
-                            ),
-                            child: OutlinedButton(
-                              onPressed: () async {},
-                              child: Center(
-                                child:
-                                Text("My Posts", style: GoogleFonts.nunito(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.midBlue,
+                              ),
+                              child: OutlinedButton(
+                                onPressed: () async {},
+                                child: Center(
+                                  child: Text(
+                                    "My Posts",
+                                    style: GoogleFonts.nunito(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColors.midBlue,
-                            ),
-                            child: OutlinedButton(
-                              onPressed: () async {},
-                              child: Center(
-                                child:
-                                Text("Read Counts", style: GoogleFonts.nunito(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.midBlue,
+                              ),
+                              child: OutlinedButton(
+                                onPressed: () async {},
+                                child: Center(
+                                  child: Text(
+                                    "Read Counts",
+                                    style: GoogleFonts.nunito(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          );
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            );
           }
-        return CircularProgressIndicator();
-      }
-    );
+          return CircularProgressIndicator();
+        });
   }
 }
 
-Widget buildName(Users myUser){
+Widget buildName(Users myUser) {
   return Column(
     children: [
       Text(
@@ -174,19 +173,19 @@ Widget buildName(Users myUser){
           fontSize: 25,
         ),
       ),
-      SizedBox(height: 5)
-,      Text(
+      SizedBox(height: 5),
+      Text(
         myUser.email,
         style: GoogleFonts.nunito(
-        color: AppColors.midBlue,
-        fontSize: 15,
+          color: AppColors.midBlue,
+          fontSize: 15,
         ),
       ),
     ],
   );
 }
 
-Widget buildBio(Users myUser){
+Widget buildBio(Users myUser) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 20),
     child: Column(
@@ -210,5 +209,3 @@ Widget buildBio(Users myUser){
     ),
   );
 }
-
-
