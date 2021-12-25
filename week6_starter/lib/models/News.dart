@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class News {
+  late String newsId;
   late String title;
   late String subtitle;
   late String content;
@@ -13,6 +14,7 @@ class News {
   late int numDislike;
 
   News(
+      String newsId,
       String title,
       String subtitle,
       String content,
@@ -23,6 +25,7 @@ class News {
       List<String> comments,
       int numLike,
       int numDislike) {
+    this.newsId = newsId;
     this.title = title;
     this.subtitle = subtitle;
     this.content = content;
@@ -36,7 +39,8 @@ class News {
   }
 
   News.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
+      : newsId = json['newsId'],
+        title = json['title'],
         subtitle = json['subtitle'],
         content = json['content'],
         image = json['image'],
@@ -48,7 +52,9 @@ class News {
         numLike = json['numLike'],
         numDislike = json['numDislike'];
 
+
   Map<String, dynamic> toJson() => {
+        'newsId': newsId,
         'title': title,
         'subtitle': subtitle,
         'content': content,
