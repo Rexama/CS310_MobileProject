@@ -16,7 +16,7 @@ class Users {
   late int numHist;
   late int numMagazine;
 
-  Users(  String userId, String userName, bool isActive, bool isPriv, String image,
+  Users(String userId, String userName, bool isActive, bool isPriv, String image,
       String userBio, int numOfArticles, List<dynamic> likedNews, String userToken,
       String email, int numScience, numFinance, int numSports, numHist, numMagazine) {
     this.userId = userId;

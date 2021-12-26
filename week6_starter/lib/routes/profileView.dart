@@ -150,6 +150,31 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white,
+                                border: Border.all(color: AppColors.darkBlue),
+                              ),
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  auth.signOut();
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "Sign Out",
+                                    style: GoogleFonts.nunito(
+                                        color: AppColors.darkBlue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
