@@ -23,7 +23,6 @@ class BlogView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.darkBlue,
-        title: Text(content.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -50,22 +49,18 @@ class BlogView extends StatelessWidget {
               height: 15.0,
             ),
             Container(
-              padding: EdgeInsets.all(6.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.midBlue),
-                color: AppColors.whiteBlue,
-              ),
+              padding: EdgeInsets.all(10.0),
               child: Text(
                 content.title,
                 style: GoogleFonts.nunito(
                   color: AppColors.darkestBlue,
                   fontWeight: FontWeight.w800,
-                  fontSize: 18,
+                  fontSize: 22,
                 ),
               ),
             ),
             SizedBox(
-              height: 15.0,
+              height: 10.0,
             ),
             Container(
               padding: EdgeInsets.all(10),
@@ -73,7 +68,7 @@ class BlogView extends StatelessWidget {
                 content.content,
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
+                  fontSize: 17.0,
                 ),
               ),
             )

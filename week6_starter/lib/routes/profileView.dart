@@ -79,6 +79,7 @@ class _ProfileViewState extends State<ProfileView> {
                     color: AppColors.darkBlue,
                   )),
                   const SizedBox(height: 30),
+
                   Stack(
                     children: [
                       Column(
@@ -150,10 +151,11 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 35),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Container(
+                              height: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
                                 color: Colors.white,

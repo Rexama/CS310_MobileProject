@@ -57,11 +57,22 @@ class _NewsView extends State<NewsView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.darkBlue,
-        title: Text(widget.content.title),
       ),
       body: ListView(
         padding: const EdgeInsets.all(8.0),
         children: [
+          SizedBox(height: 15),
+          Center(
+            child: Text(
+              widget.content.title,
+              style: GoogleFonts.robotoSlab(
+                color: AppColors.darkestBlue,
+                fontWeight: FontWeight.w800,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +106,7 @@ class _NewsView extends State<NewsView> {
                   style: GoogleFonts.robotoSlab(
                     color: AppColors.darkestBlue,
                     fontWeight: FontWeight.w800,
-                    fontSize: 18,
+                    fontSize: 17,
                   ),
                 ),
               ),
