@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:week6_starter/models/Blog.dart';
+import 'package:week6_starter/models/Comment.dart';
 import 'package:week6_starter/models/News.dart';
 
 class DBService {
@@ -50,23 +51,52 @@ class DBService {
     return allNews;
   }
 
-  //Future getNew(int id, List<News> allNews) async {
-  //  firestoreInstance.collection("news").doc("").get().then((querySnapshot) {
-  //    querySnapshot.docs.forEach((result) {
-  //      News tempNew = News.fromJson(result.data());
-  //      allNews.add(tempNew);
-  //    });
-  //  });
-  //  return allNews;
-  //}
-
-  Future getBlogs(List<Blog> allBlogs) async {
-    firestoreInstance.collection("blog").get().then((querySnapshot) {
+  /*Future getComments(List<Comment> comments) async {
+    firestoreInstance.collection("comment").get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
-        Blog tempBlog = Blog.fromJson(result.data());
-        allBlogs.add(tempBlog);
+        Comment tempComment = Comment.fromJson(result.data());
+        comments.add(tempComment);
+        print(comments[0].content);
       });
     });
+    return comments;
+  }*/
+
+  Future getComments(List<Comment> comments, String id, bool isBlog) async {
+    var id_type;
+    if (isBlog) {
+      id_type = "blogId";
+    } else {
+      id_type = "newsId";
+    }
+    print(id);
+    firestoreInstance
+        .collection("comment")
+        .where('newsId', isEqualTo: id)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        Comment tempComment = Comment.fromJson(result.data());
+        comments.add(tempComment);
+        print(comments);
+      });
+    });
+    return comments;
+  }
+
+  Future getBlogs(List<Blog> allBlogs) async {
+    firestoreInstance
+        .collection("blog")
+        .get()
+        .then((querySnapshot) {
+          querySnapshot.docs.forEach((result) {
+            Blog tempBlog = Blog.fromJson(result.data());
+            allBlogs.add(tempBlog);
+          });
+        })
+        .then((value) => print('Comment get'))
+        .catchError((error) => print('Error: ${error.toString()}'));
+    ;
   }
 
   Future updateProfile(
@@ -77,5 +107,31 @@ class DBService {
       'email': email,
     });
     print("Updated");
+  }
+
+  Future addComment(
+      String comment, String username, String id, bool isBlog) async {
+    var data;
+    if (isBlog) {
+      data = {
+        'blogId': id,
+        'username': username,
+        'content': comment,
+        'newsId': "",
+        'userId': "1",
+      };
+    } else {
+      data = {
+        'blogId': "",
+        'username': username,
+        'content': comment,
+        'newsId': id,
+      };
+      firestoreInstance
+          .collection("comment")
+          .add(data)
+          .then((value) => print('User added'))
+          .catchError((error) => print('Error: ${error.toString()}'));
+    }
   }
 }
