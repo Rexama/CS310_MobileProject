@@ -22,6 +22,7 @@ class BlogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.darkBlue,
         title: Text(content.title),
       ),
       body: Padding(
@@ -35,37 +36,45 @@ class BlogView extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 //let's add the height
-
                 image: DecorationImage(
                     image: NetworkImage(content.image.toString()),
                     fit: BoxFit.cover),
-                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(
+                  color: AppColors.midBlue,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(5),
               ),
             ),
             SizedBox(
-              height: 8.0,
+              height: 15.0,
             ),
             Container(
               padding: EdgeInsets.all(6.0),
               decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(30.0),
+                border: Border.all(color: AppColors.midBlue),
+                color: AppColors.whiteBlue,
               ),
               child: Text(
                 content.title,
-                style: TextStyle(
-                  color: Colors.white,
+                style: GoogleFonts.nunito(
+                  color: AppColors.darkestBlue,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 18,
                 ),
               ),
             ),
             SizedBox(
-              height: 8.0,
+              height: 15.0,
             ),
-            Text(
-              content.content,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                content.content,
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             )
           ],
