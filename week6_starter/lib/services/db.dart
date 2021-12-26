@@ -50,6 +50,20 @@ class DBService {
     return allNews;
   }
 
+  Future getNewsCat(List<News> allNews, String cat) async {
+    firestoreInstance.collection("news").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        News tempNew = News.fromJson(result.data());
+        if(cat == tempNew.category)
+        {
+          allNews.add(tempNew);
+        }
+
+      });
+    });
+    return allNews;
+  }
+
   //Future getNew(int id, List<News> allNews) async {
   //  firestoreInstance.collection("news").doc("").get().then((querySnapshot) {
   //    querySnapshot.docs.forEach((result) {
