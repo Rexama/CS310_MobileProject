@@ -37,7 +37,7 @@ class _FeedView extends State<FeedView> {
         this.allNews = allNews;
       });
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
+    _timer = Timer.periodic(Duration(seconds: 0), (Timer t) => setState(() {}));
     super.initState();
   }
 
@@ -115,6 +115,9 @@ class _FeedView extends State<FeedView> {
                                       child: Column(
                                         children: [
                                           ListTile(
+                                            dense:true,
+                                            //contentPadding: EdgeInsets.only(left: 20.0, right: 5.0),
+                                            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal:3.0),
                                             title: Text(
                                               allNews[index].title.length > 20
                                                   ? allNews[index]

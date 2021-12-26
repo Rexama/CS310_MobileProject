@@ -39,7 +39,7 @@ class _BlogFeedView extends State<BlogFeedView> {
         this.allBlogs = allBlogs;
       });
     });
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
+    _timer = Timer.periodic(Duration(seconds: 0), (Timer t) => setState(() {}));
     super.initState();
   }
 
@@ -115,6 +115,9 @@ class _BlogFeedView extends State<BlogFeedView> {
                                                 width: 5,
                                               ),
                                               ListTile(
+                                                dense:true,
+                                                //contentPadding: EdgeInsets.only(left: 20.0, right: 5.0),
+                                                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal:5.0),
                                                 title: Text(
                                                   allBlogs[index].title.length >
                                                           20
