@@ -9,11 +9,13 @@ class DBService {
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
-    List<String> strList = [];
+    List<dynamic> strList = [];
     userCollection
         .doc(token)
         .set({
+          'userId': token,
           'username': username,
+
           'userToken': token,
           'email': mail,
           'isActive': true,
