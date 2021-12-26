@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:week6_starter/routes/blogFeedView.dart';
+import 'package:week6_starter/routes/exploreView.dart';
 import 'package:week6_starter/routes/profileView.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
@@ -39,7 +40,7 @@ class _HomeState extends State<Home> {
     _children = [
       FeedView(analytics: widget.analytics, observer: widget.observer),
       BlogFeedView(analytics: widget.analytics, observer: widget.observer),
-      Center(child: Text("explore")),
+      exploreView(analytics: widget.analytics, observer: widget.observer),
       ProfileView(analytics: widget.analytics, observer: widget.observer),
     ];
     super.initState();
