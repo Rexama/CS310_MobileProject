@@ -1,4 +1,5 @@
 class Users {
+  late String userId;
   late String userName;
   late bool isActive;
   late bool isPriv;
@@ -15,9 +16,10 @@ class Users {
   late int numHist;
   late int numMagazine;
 
-  Users( String userName, bool isActive, bool isPriv, String image,
+  Users(  String userId, String userName, bool isActive, bool isPriv, String image,
       String userBio, int numOfArticles, List<dynamic> likedNews, String userToken,
       String email, int numScience, numFinance, int numSports, numHist, numMagazine) {
+    this.userId = userId;
     this.userName = userName;
     this.isActive = isActive;
     this.isPriv = isPriv;
@@ -35,7 +37,8 @@ class Users {
   }
 
   Users.fromJson(Map<String, dynamic> json)
-      : userName = json['username'],
+      : userId = json['userId'],
+        userName = json['username'],
         isActive = json['isActive'],
         isPriv = json['isPriv'],
         image = json['image'],
@@ -51,6 +54,7 @@ class Users {
         numMagazine = json['numMagazine'];
 
   Map<String, dynamic> toJson() => {
+    'userId': userId,
     'userName': userName,
     'isActive': isActive,
     'isPriv': isPriv,

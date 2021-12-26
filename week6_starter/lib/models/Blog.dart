@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Blog {
+  late String blogId;
   late String title;
   late String content;
   late String? image;
@@ -9,8 +10,9 @@ class Blog {
   late List<String>? comments;
   late String userId;
 
-  Blog(String title, DateTime uploadDate, String content, String image,
+  Blog(String blogId, String title, DateTime uploadDate, String content, String image,
       List<String> category, List<String> comments, String userId) {
+    this.blogId = blogId;
     this.title = title;
     this.uploadDate = uploadDate;
     this.content = content;
@@ -21,7 +23,8 @@ class Blog {
   }
 
   Blog.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
+      : blogId = json['blogId'],
+        title = json['title'],
         uploadDate = (json['uploadDate'] as Timestamp).toDate(),
         content = json['content'],
         comments = List<String>.from(json['comments'].map((i) => i.toString())),
@@ -30,6 +33,7 @@ class Blog {
         userId = json['userId'];
 
   Map<String, dynamic> toJson() => {
+    'blogId': blogId,
     'title': title,
     'uploadDate': uploadDate,
     'content': content,
