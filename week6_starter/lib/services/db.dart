@@ -54,11 +54,17 @@ class DBService {
     firestoreInstance.collection("news").get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         News tempNew = News.fromJson(result.data());
-        if(cat == tempNew.category)
-        {
-          allNews.add(tempNew);
-        }
+        //print(tempNew.category.toString());
+        //print(tempNew.category[0].toString());
 
+        for(int i = 0; i < tempNew.category.length; i++)
+          {
+            if(tempNew.category[i] == cat)
+              {
+                print(tempNew.category[i].toString());
+                allNews.add(tempNew);
+              }
+          }
       });
     });
     return allNews;
