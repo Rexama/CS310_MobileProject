@@ -128,7 +128,7 @@ class _NewsView extends State<NewsView> {
               ),
               ListTile(
                   title: Text(
-                    "uzun adam", //comments[index].username,
+                    "yürüyen uçak", //comments[index].username,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle:
