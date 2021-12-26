@@ -82,8 +82,10 @@ class _FeedView extends State<FeedView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  NewsView(content: allNews[index]),
+                              builder: (context) => NewsView(
+                                  analytics: widget.analytics,
+                                  observer: widget.observer,
+                                  content: allNews[index]),
                             ),
                           );
                         },
@@ -115,9 +117,12 @@ class _FeedView extends State<FeedView> {
                                       child: Column(
                                         children: [
                                           ListTile(
-                                            dense:true,
+                                            dense: true,
                                             //contentPadding: EdgeInsets.only(left: 20.0, right: 5.0),
-                                            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal:3.0),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 10.0,
+                                                    horizontal: 3.0),
                                             title: Text(
                                               allNews[index].title.length > 20
                                                   ? allNews[index]

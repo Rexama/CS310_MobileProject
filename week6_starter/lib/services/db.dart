@@ -15,7 +15,6 @@ class DBService {
         .set({
           'userId': token,
           'username': username,
-
           'userToken': token,
           'email': mail,
           'isActive': true,
@@ -53,6 +52,23 @@ class DBService {
     return allNews;
   }
 
+  Future getNewsCat(List<News> allNews, String cat) async {
+    firestoreInstance.collection("news").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        News tempNew = News.fromJson(result.data());
+        //print(tempNew.category.toString());
+        //print(tempNew.category[0].toString());
+
+        for (int i = 0; i < tempNew.category.length; i++) {
+          if (tempNew.category[i] == cat) {
+            print(tempNew.category[i].toString());
+            allNews.add(tempNew);
+          }
+        }
+      });
+    });
+    return allNews;
+  }
   /*Future getComments(List<Comment> comments) async {
     firestoreInstance.collection("comment").get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
@@ -65,11 +81,11 @@ class DBService {
   }*/
 
   Future getComments(List<Comment> comments, String id, bool isBlog) async {
-    var id_type;
+    var type;
     if (isBlog) {
-      id_type = "blogId";
+      type = "blogId";
     } else {
-      id_type = "newsId";
+      type = "newsId";
     }
     print(id);
     firestoreInstance
@@ -98,7 +114,6 @@ class DBService {
         })
         .then((value) => print('Comment get'))
         .catchError((error) => print('Error: ${error.toString()}'));
-    ;
   }
 
   Future updateProfile(

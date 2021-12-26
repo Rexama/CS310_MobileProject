@@ -39,91 +39,119 @@ class _NewsView extends State<NewsView> {
   List<Comment> comments = [];
   DBService db = DBService();
   late Timer _timer;
+  String comment = "";
 
-  @override
+  /*@override
   void initState() {
     db.getComments(comments, widget.content.newsId, false).then((data) {
       setState(() {
         this.comments = comments;
       });
     });
-    print(comments);
-    print("aaa");
-    //_timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
-    //super.initState();
-    print(comments);
-  }
-
-  /*@override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }*/
 
   @override
   Widget build(BuildContext context) {
+    print(comments.length);
+    print("aa");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.darkBlue,
-        title: Text(content.title),
+        title: Text(widget.content.title),
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 200.0,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                //let's add the height
-                image: DecorationImage(
-                    image: NetworkImage(content.image.toString()),
-                    fit: BoxFit.cover),
-                border: Border.all(
-                  color: AppColors.midBlue,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(5),
-
-              ),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.midBlue),
-                color: AppColors.whiteBlue,
-
-              ),
-              child: Text(
-                content.subtitle,
-                style: GoogleFonts.robotoSlab(
-                  color: AppColors.darkestBlue,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 200.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  //let's add the height
+                  image: DecorationImage(
+                      image: NetworkImage(widget.content.image.toString()),
+                      fit: BoxFit.cover),
+                  border: Border.all(
+                    color: AppColors.midBlue,
+                    width: 3,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                content.content,
-                style: GoogleFonts.robotoSlab(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
+              SizedBox(
+                height: 15.0,
+              ),
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.midBlue),
+                  color: AppColors.whiteBlue,
+                ),
+                child: Text(
+                  widget.content.subtitle,
+                  style: GoogleFonts.robotoSlab(
+                    color: AppColors.darkestBlue,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                  ),
                 ),
               ),
-            )
-          ],
-        ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  widget.content.content,
+                  style: GoogleFonts.robotoSlab(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              ListTile(
+                  title: Text(
+                    "uzun adam", //comments[index].username,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle:
+                      Text("uzun adam çok yaşa" //comments[index].content),
+                          )),
+              SizedBox(
+                height: 15.0,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter your comment here ...',
+                  hintStyle: TextStyle(
+                    color: AppColors.openBlue,
+                  ),
+                ),
+                maxLines: 1,
+                onChanged: (value) {
+                  comment = value;
+                },
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.midBlue,
+                  ),
+                  child: Text("Comment"),
+                  onPressed: () {
+                    //db.addComment(
+                    //  comment, userClass.userName, "d327", false);
+                  }),
+            ],
+          )
+        ],
       ),
     );
   }

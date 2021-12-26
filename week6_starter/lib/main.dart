@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/routes/blogFeedView.dart';
+import 'package:week6_starter/routes/newsView.dart';
 import 'package:week6_starter/routes/profileView.dart';
 import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/routes/login.dart';
@@ -67,6 +68,8 @@ class MyApp extends StatelessWidget {
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
+  get content => null;
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<User?>.value(
@@ -90,6 +93,8 @@ class MyApp extends StatelessWidget {
               BlogFeedView(analytics: analytics, observer: observer),
           '/profileView': (context) =>
               ProfileView(analytics: analytics, observer: observer),
+          '/newsView': (context) => NewsView(
+              analytics: analytics, observer: observer, content: content),
         },
       ),
     );
