@@ -1,16 +1,7 @@
-import 'dart:async';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
-import 'package:week6_starter/models/News.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/models/Blog.dart';
-import 'package:week6_starter/services/auth.dart';
-import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
-import 'package:week6_starter/utils/dimension.dart';
-import 'package:week6_starter/utils/styles.dart';
-import 'package:intl/intl.dart';
 
 class BlogView extends StatelessWidget {
   // Requiring the list of todos.
