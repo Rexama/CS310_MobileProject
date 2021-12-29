@@ -10,14 +10,13 @@ class Blog {
   late List<String>? comments;
   late String userId;
 
-  Blog(String blogId, String title, DateTime uploadDate, String content, String image,
-      List<String> category, List<String> comments, String userId) {
+  Blog(String blogId, String title, DateTime uploadDate, String content, String image, List<String> category,
+      String userId) {
     this.blogId = blogId;
     this.title = title;
     this.uploadDate = uploadDate;
     this.content = content;
     this.category = category;
-    this.comments = comments;
     this.image = image;
     this.userId = userId;
   }
@@ -27,19 +26,18 @@ class Blog {
         title = json['title'],
         uploadDate = (json['uploadDate'] as Timestamp).toDate(),
         content = json['content'],
-        comments = List<String>.from(json['comments'].map((i) => i.toString())),
-        image = json['imageUrl'],
-        category =  List<String>.from(json['category'].map((i) => i.toString())),
+        image = json['image'],
+        category = List<String>.from(json['category'].map((i) => i.toString())),
         userId = json['userId'];
 
   Map<String, dynamic> toJson() => {
-    'blogId': blogId,
-    'title': title,
-    'uploadDate': uploadDate,
-    'content': content,
-    'comments': comments,
-    'imageUrl': image,
-    'category': category,
-    'userId': userId,
-  };
+        'blogId': blogId,
+        'title': title,
+        'uploadDate': uploadDate,
+        'content': content,
+        'comments': comments,
+        'image': image,
+        'category': category,
+        'userId': userId,
+      };
 }

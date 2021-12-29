@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:week6_starter/models/Blog.dart';
 import 'package:week6_starter/models/Comment.dart';
 import 'package:week6_starter/models/News.dart';
+import 'package:uuid/uuid.dart';
 
 class DBService {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
@@ -69,6 +69,7 @@ class DBService {
     });
     return allNews;
   }
+
   /*Future getComments(List<Comment> comments) async {
     firestoreInstance.collection("comment").get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
@@ -88,11 +89,7 @@ class DBService {
       type = "newsId";
     }
     print(id);
-    firestoreInstance
-        .collection("comment")
-        .where('newsId', isEqualTo: id)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("comment").where('newsId', isEqualTo: id).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         Comment tempComment = Comment.fromJson(result.data());
         comments.add(tempComment);
@@ -112,12 +109,11 @@ class DBService {
             allBlogs.add(tempBlog);
           });
         })
-        .then((value) => print('Comment get'))
+        .then((value) => print(allBlogs[0].image as String))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future updateProfile(
-      String username, String userBio, String email, String token) async {
+  Future updateProfile(String username, String userBio, String email, String token) async {
     firestoreInstance.collection("users").doc(token).update({
       'username': username,
       'userBio': userBio,
@@ -126,8 +122,7 @@ class DBService {
     print("Updated");
   }
 
-  Future addComment(
-      String comment, String username, String id, bool isBlog) async {
+  Future addComment(String comment, String username, String id, bool isBlog) async {
     var data;
     if (isBlog) {
       data = {
@@ -149,6 +144,51 @@ class DBService {
           .add(data)
           .then((value) => print('User added'))
           .catchError((error) => print('Error: ${error.toString()}'));
+    }
+  }
+  
+  Future<DateTime>? lastBlogDate(String userID) async {
+    DateTime recentUpload = new DateTime(2021);
+    await firestoreInstance
+        .collection("blog")
+        .where('userId', isEqualTo: userID)
+        .get()
+        .then((querySnapshot) {
+            Blog tempBlog = Blog.fromJson(querySnapshot.docs.first.data());
+            recentUpload = tempBlog.uploadDate;
+            print("inside lastBlogDate, recentUpload: " + recentUpload.toString());
+          })
+        .catchError((error) => print('Error: ${error.toString()}'));
+    return recentUpload;
+  }
+
+  Future postBlogItem(String title, String content, String imageUrl, List<String> categories, DateTime uploadDate,
+      String userID) async {
+    var data;
+    var uuid = Uuid();
+    final String blogID = uuid.v4();
+    DateTime recentUpload = await lastBlogDate(userID) as DateTime;
+    //print("inside postBlogItem, lastBlogDate: " + recentUpload.toString());
+    //print("inside postBlogItem, lastBlogDate+1day: " + recentUpload.add(Duration(days: 1)).toString());
+    //print("inside postBlogItem, uploadDate: " + uploadDate.toString());
+    if (recentUpload.add(Duration(days: 1)).isBefore(uploadDate)) {
+      data = {
+        'blogId': blogID,
+        'category': categories,
+        'content': content,
+        'image': imageUrl,
+        'title': title,
+        'uploadDate': uploadDate,
+        'userId': userID,
+      };
+      firestoreInstance
+          .collection("blog")
+          .add(data)
+          .then((value) => print('Blog posted by ' + userID))
+          .catchError((error) => print('Error: ${error.toString()}'));
+    }
+    else {
+      throw("nein nein nein!!! you have already posted once today!!!");
     }
   }
 }

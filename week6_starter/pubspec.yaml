@@ -36,6 +36,7 @@ dependencies:
   shared_preferences: ^2.0.11
   image_picker: ^0.8.4+4
   comment_box: ^0.0.16
+  uuid: ^3.0.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
