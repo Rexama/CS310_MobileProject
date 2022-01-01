@@ -10,10 +10,12 @@ class DBService {
 
   Future addUserAutoID(String username, String mail, String token) async {
     List<dynamic> strList = [];
+    var uuid = Uuid();
+    final String userId = uuid.v4();
     userCollection
         .doc(token)
         .set({
-          'userId': token,
+          'userId': userId,
           'username': username,
           'userToken': token,
           'email': mail,
@@ -35,7 +37,10 @@ class DBService {
   }
 
   Future addUser(String username, String mail, String token) async {
+    var uuid = Uuid();
+    final String userId = uuid.v4();
     userCollection.doc(token).set({
+      'userId': userId,
       'username': username,
       'userToken': token,
       'email': mail,
@@ -122,15 +127,18 @@ class DBService {
     print("Updated");
   }
 
-  Future addComment(String comment, String username, String id, bool isBlog) async {
+  Future addComment(String comment, String username, String id, String userId, bool isBlog) async {
     var data;
+    var uuid = Uuid();
+    final String commentId = uuid.v4();
     if (isBlog) {
       data = {
         'blogId': id,
         'username': username,
         'content': comment,
         'newsId': "",
-        'userId': "1",
+        'userId': userId,
+        'commentId': commentId,
       };
     } else {
       data = {
@@ -138,6 +146,8 @@ class DBService {
         'username': username,
         'content': comment,
         'newsId': id,
+        'userId': userId,
+        'commentId': commentId,
       };
       firestoreInstance
           .collection("comment")
@@ -190,5 +200,20 @@ class DBService {
     else {
       throw("nein nein nein!!! you have already posted once today!!!");
     }
+  }
+
+  Future getBlogsById(String blogId, List<Blog> blogsById) async {
+    firestoreInstance
+        .collection("blog")
+        .where('blogId', isEqualTo: blogId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        Blog tempBlog = Blog.fromJson(result.data());
+        blogsById.add(tempBlog);
+      });
+    })
+        .then((value) => print(blogsById[0].image as String))
+        .catchError((error) => print('Error: ${error.toString()}'));
   }
 }
