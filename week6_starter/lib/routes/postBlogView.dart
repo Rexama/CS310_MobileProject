@@ -191,6 +191,7 @@ class _PostBlogFeedView extends State<PostBlogFeedView> {
                                   },
                                 );
                           });
+                          Navigator.pop(context);
                         },
                       ),
                     ),

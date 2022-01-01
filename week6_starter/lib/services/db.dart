@@ -3,6 +3,7 @@ import 'package:week6_starter/models/Blog.dart';
 import 'package:week6_starter/models/Comment.dart';
 import 'package:week6_starter/models/News.dart';
 import 'package:uuid/uuid.dart';
+import 'package:week6_starter/models/Users.dart';
 
 class DBService {
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
@@ -45,6 +46,20 @@ class DBService {
       'userToken': token,
       'email': mail,
     });
+  }
+
+  Future<Users?> getUser(String userID) async {
+    Users? user = null;
+    await firestoreInstance
+        .collection("users")
+        .where('userId', isEqualTo: userID)
+        .get()
+        .then((querySnapshot) {
+      user = Users.fromJson(querySnapshot.docs.first.data());
+      print("I received that user from database: " + user!.userName);
+    })
+        .catchError((error) => print('Error: ${error.toString()}'));
+    return user;
   }
 
   Future getNews(List<News> allNews) async {
@@ -161,6 +176,7 @@ class DBService {
     DateTime recentUpload = new DateTime(2021);
     await firestoreInstance
         .collection("blog")
+        .orderBy('uploadDate', descending: true)
         .where('userId', isEqualTo: userID)
         .get()
         .then((querySnapshot) {

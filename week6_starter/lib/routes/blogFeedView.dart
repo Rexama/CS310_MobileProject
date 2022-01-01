@@ -87,7 +87,10 @@ class _BlogFeedView extends State<BlogFeedView> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => BlogView(content: allBlogs[index]),
+                                      builder: (context) => BlogView(
+                                          analytics: widget.analytics,
+                                          observer: widget.observer,
+                                          content: allBlogs[index]),
                                     ),
                                   );
                                 },
