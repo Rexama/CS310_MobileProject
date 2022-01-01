@@ -16,8 +16,7 @@ import 'package:week6_starter/routes/editProfileView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
+  const ProfileView({Key? key, required this.analytics, required this.observer}) : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
@@ -36,149 +35,174 @@ class _ProfileViewState extends State<ProfileView> {
     print('user id: ${user!.uid}');
     return FutureBuilder(
         future: db.userCollection.doc(user.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass =
-                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
               body: ListView(
                 physics: BouncingScrollPhysics(),
                 children: [
-                  SizedBox(height: 30),
-                  ProfileWidget(
-                      imagePath: userClass.image,
-                      onClicked: () {
-                        if (user.isAnonymous) {
-                          return;
-                        } else {
-                          Navigator.of(context)
-                              .push(
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfileView()),
-                              )
-                              .then((value) => {setState(() {})});
-                        }
-                      }),
-                  SizedBox(height: 20),
-                  buildName(userClass),
-                  SizedBox(height: 30),
-                  Expanded(
-                      child: Divider(
-                    indent: 3,
-                    endIndent: 3,
-                    thickness: 2,
-                    color: AppColors.darkBlue,
-                  )),
-                  buildBio(userClass),
-                  Expanded(
-                      child: Divider(
-                    indent: 3,
-                    endIndent: 3,
-                    thickness: 2,
-                    color: AppColors.darkBlue,
-                  )),
-                  const SizedBox(height: 30),
-
-                  Stack(
+                  Column(
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.midBlue,
-                              ),
-                              child: OutlinedButton(
-                                onPressed: () async {},
-                                child: Center(
-                                  child: Text(
-                                    "Favourites",
-                                    style: GoogleFonts.nunito(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.midBlue,
-                              ),
-                              child: OutlinedButton(
-                                onPressed: () async {},
-                                child: Center(
-                                  child: Text(
-                                    "My Posts",
-                                    style: GoogleFonts.nunito(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.midBlue,
-                              ),
-                              child: OutlinedButton(
-                                onPressed: () async {},
-                                child: Center(
-                                  child: Text(
-                                    "Read Counts",
-                                    style: GoogleFonts.nunito(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 35),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white,
-                                border: Border.all(color: AppColors.darkBlue),
-                              ),
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  auth.signOut();
-                                },
-                                child: Center(
-                                  child: Text(
-                                    "Sign Out",
-                                    style: GoogleFonts.nunito(
-                                        color: AppColors.darkBlue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                      SizedBox(height: 30),
+                      ProfileWidget(
+                          imagePath: userClass.image,
+                          onClicked: () {
+                            if (user.isAnonymous) {
+                              return;
+                            } else {
+                              Navigator.of(context)
+                                  .push(
+                                    MaterialPageRoute(builder: (context) => EditProfileView()),
+                                  )
+                                  .then((value) => {setState(() {})});
+                            }
+                          }),
+                      SizedBox(height: 20),
+                      buildName(userClass),
+                      SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Divider(
+                            indent: 3,
+                            endIndent: 3,
+                            thickness: 2,
+                            color: AppColors.darkBlue,
+                          )),
                         ],
-                      )
+                      ),
+                      buildBio(userClass),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Divider(
+                            indent: 3,
+                            endIndent: 3,
+                            thickness: 2,
+                            color: AppColors.darkBlue,
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      Stack(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.midBlue,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () async {},
+                                    child: Center(
+                                      child: Text(
+                                        "Favourites",
+                                        style: GoogleFonts.nunito(
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.midBlue,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () async {},
+                                    child: Center(
+                                      child: Text(
+                                        "My Posts",
+                                        style: GoogleFonts.nunito(
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.midBlue,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () async {},
+                                    child: Center(
+                                      child: Text(
+                                        "Read Counts",
+                                        style: GoogleFonts.nunito(
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: AppColors.midBlue,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () async {
+                                      db.makeAccountPrivate(userClass.userToken, !userClass.isPriv);
+                                      setState(() {});
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        userClass.isPriv ? "Make Account Public" : "Make Account Private",
+                                        style: GoogleFonts.nunito(
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 35),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    border: Border.all(color: AppColors.darkBlue),
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      auth.signOut();
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        "Sign Out",
+                                        style: GoogleFonts.nunito(
+                                            color: AppColors.darkBlue, fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ],
                   )
                 ],

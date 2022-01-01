@@ -142,6 +142,13 @@ class DBService {
     print("Updated");
   }
 
+  Future makeAccountPrivate(String token, bool isPrivate) async {
+    firestoreInstance.collection("users").doc(token).update({
+      'isPriv': isPrivate,
+    });
+    print("Updated");
+  }
+
   Future addComment(String comment, String username, String id, String userId, bool isBlog) async {
     var data;
     var uuid = Uuid();
