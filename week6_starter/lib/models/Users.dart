@@ -7,7 +7,8 @@ class Users {
   late String? userBio;
   late String userPw;
   late int numOfArticles;
-  late List<dynamic> likedNews;
+  late List<String> likedNews;
+  late List<String> dislikedNews;
   late String userToken;
   late String email;
   late int numScience;
@@ -17,7 +18,7 @@ class Users {
   late int numMagazine;
 
   Users(String userId, String userName, bool isActive, bool isPriv, String image,
-      String userBio, int numOfArticles, List<dynamic> likedNews, String userToken,
+      String userBio, int numOfArticles, List<String> likedNews, List<String> dislikedNews, String userToken,
       String email, int numScience, numFinance, int numSports, numHist, numMagazine) {
     this.userId = userId;
     this.userName = userName;
@@ -27,6 +28,7 @@ class Users {
     this.userBio = userBio;
     this.numOfArticles = numOfArticles;
     this.likedNews = likedNews;
+    this.dislikedNews = dislikedNews;
     this.userToken = userToken;
     this.email = email;
     this.numScience = numScience;
@@ -44,7 +46,8 @@ class Users {
         image = json['image'],
         userBio = json['userBio'],
         numOfArticles = json['numOfArticles'],
-        likedNews = json['likedNews'],
+        likedNews = List<String>.from(json['likedNews'].map((i) => i.toString())),
+        dislikedNews = List<String>.from(json['dislikedNews'].map((i) => i.toString())),
         userToken = json['userToken'],
         email = json['email'],
         numScience = json['numScience'],
@@ -62,6 +65,7 @@ class Users {
     'userBio': userBio,
     'numOfArticles': numOfArticles,
     'likedNews': likedNews,
+    'dislikedNews': dislikedNews,
     'userToken': userToken,
     'email': email,
     'numScience': numScience,

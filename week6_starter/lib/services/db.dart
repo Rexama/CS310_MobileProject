@@ -273,10 +273,10 @@ class DBService {
     }
   }
 
-  Future getBlogsById(String blogId, List<Blog> blogsById) async {
+  Future getBlogsById(String userId, List<Blog> blogsById) async {
     firestoreInstance
         .collection("blog")
-        .where('blogId', isEqualTo: blogId)
+        .where('userId', isEqualTo: userId)
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
@@ -285,6 +285,20 @@ class DBService {
       });
     })
         .then((value) => print(blogsById[0].image as String))
+        .catchError((error) => print('Error: ${error.toString()}'));
+  }
+
+  Future getLikedItemIds(String userId, List<String> newsIds) async {
+    firestoreInstance
+        .collection("Users")
+        .where('userId', isEqualTo: userId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        newsIds = Users.fromJson(result.data()).likedNews;
+      });
+    })
+        .then((value) => print(newsIds))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 }
