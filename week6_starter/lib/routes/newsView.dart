@@ -22,7 +22,12 @@ import 'package:comment_box/main.dart';
 
 class NewsView extends StatefulWidget {
   @override
-  const NewsView({Key? key, required this.analytics, required this.observer, required this.content}) : super(key: key);
+  const NewsView(
+      {Key? key,
+      required this.analytics,
+      required this.observer,
+      required this.content})
+      : super(key: key);
 
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -59,9 +64,11 @@ class _NewsView extends State<NewsView> {
 
     return FutureBuilder(
         future: db.userCollection.doc(user!.uid).get(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass =
+                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: AppColors.darkBlue,
@@ -90,8 +97,10 @@ class _NewsView extends State<NewsView> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           //let's add the height
-                          image:
-                              DecorationImage(image: NetworkImage(widget.content.image.toString()), fit: BoxFit.cover),
+                          image: DecorationImage(
+                              image:
+                                  NetworkImage(widget.content.image.toString()),
+                              fit: BoxFit.cover),
                           border: Border.all(
                             color: AppColors.midBlue,
                             width: 3,
@@ -133,6 +142,58 @@ class _NewsView extends State<NewsView> {
                       SizedBox(
                         height: 15.0,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (!userClass.likedNews
+                                  .contains(widget.content.newsId)) {
+                                widget.content.numLike += 1;
+                                setState(() {});
+                              }
+                            },
+                            child: Icon(
+                              Icons.thumb_up,
+                              color: Color(0xff1b6609),
+                              size: 40,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            widget.content.numLike.toString(),
+                            style: GoogleFonts.robotoSlab(
+                              color: AppColors.darkBlue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          GestureDetector(
+                            child: Icon(
+                              Icons.thumb_down,
+                              color: Color(0xff7d060a),
+                              size: 40,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            widget.content.numDislike.toString(),
+                            style: GoogleFonts.robotoSlab(
+                              color: AppColors.darkBlue,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
                       ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -141,14 +202,17 @@ class _NewsView extends State<NewsView> {
                           return FutureBuilder(
                               future: db.getUser(comments[index].userId),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.done) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
                                   Users user = snapshot.data! as Users;
                                   if (user.isActive) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                             padding: EdgeInsets.all(10.0),
@@ -211,8 +275,12 @@ class _NewsView extends State<NewsView> {
                           ),
                           child: Text("Comment"),
                           onPressed: () async {
-                            await db.addComment(comment, widget.content.newsId, userClass.userId, false);
-                            await db.getComments(comments, widget.content.newsId, false).then((data) {
+                            await db.addComment(comment, widget.content.newsId,
+                                userClass.userId, false);
+                            await db
+                                .getComments(
+                                    comments, widget.content.newsId, false)
+                                .then((data) {
                               setState(() {
                                 this.comments = comments;
                               });
