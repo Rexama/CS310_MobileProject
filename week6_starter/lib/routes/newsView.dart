@@ -146,16 +146,47 @@ class _NewsView extends State<NewsView> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              if (!userClass.likedNews
+                            onTap: () async {
+                              if (!userClass.likedNews!
                                   .contains(widget.content.newsId)) {
-                                widget.content.numLike += 1;
-                                setState(() {});
+                                if (userClass.dislikedNews!
+                                    .contains(widget.content.newsId)) {
+                                  //if disliked before
+                                  await db.likeCountOperationsById(
+                                      userClass.userId,
+                                      widget.content.newsId,
+                                      1);
+                                  await db
+                                      .dislikeCountOperationsById(
+                                          userClass.userId,
+                                          widget.content.newsId,
+                                          -1)
+                                      .then((data) {
+                                    setState(() {
+                                      widget.content.numLike += 1;
+                                      widget.content.numDislike -= 1;
+                                    });
+                                  });
+                                } else {
+                                  //if not dislikedbefore
+                                  await db
+                                      .likeCountOperationsById(userClass.userId,
+                                          widget.content.newsId, 1)
+                                      .then((data) {
+                                    setState(() {
+                                      widget.content.numLike += 1;
+                                    });
+                                  });
+                                }
                               }
                             },
                             child: Icon(
+                              //0xff1b6609
                               Icons.thumb_up,
-                              color: Color(0xff1b6609),
+                              color: userClass.likedNews!
+                                      .contains(widget.content.newsId)
+                                  ? Color(0xff1b6609)
+                                  : Color(0x8f1b6609),
                               size: 40,
                             ),
                           ),
@@ -173,9 +204,46 @@ class _NewsView extends State<NewsView> {
                             width: 8,
                           ),
                           GestureDetector(
+                            onTap: () async {
+                              if (!userClass.dislikedNews!
+                                  .contains(widget.content.newsId)) {
+                                if (userClass.likedNews!
+                                    .contains(widget.content.newsId)) {
+                                  //if liked before
+                                  await db.dislikeCountOperationsById(
+                                      userClass.userId,
+                                      widget.content.newsId,
+                                      1);
+                                  await db
+                                      .likeCountOperationsById(userClass.userId,
+                                          widget.content.newsId, -1)
+                                      .then((data) {
+                                    setState(() {
+                                      widget.content.numDislike += 1;
+                                      widget.content.numLike -= 1;
+                                    });
+                                  });
+                                } else {
+                                  //if not liked before
+                                  await db
+                                      .dislikeCountOperationsById(
+                                          userClass.userId,
+                                          widget.content.newsId,
+                                          1)
+                                      .then((data) {
+                                    setState(() {
+                                      widget.content.numDislike += 1;
+                                    });
+                                  });
+                                }
+                              }
+                            },
                             child: Icon(
                               Icons.thumb_down,
-                              color: Color(0xff7d060a),
+                              color: userClass.dislikedNews!
+                                      .contains(widget.content.newsId)
+                                  ? Color(0xff7d060a)
+                                  : Color(0x8f7d060a),
                               size: 40,
                             ),
                           ),
