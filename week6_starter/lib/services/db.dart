@@ -6,12 +6,12 @@ import 'package:uuid/uuid.dart';
 import 'package:week6_starter/models/Users.dart';
 
 class DBService {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
-    List<dynamic> strList = [];
+    List<String> strList = [];
+    List<String> strListt = [];
     var uuid = Uuid();
     final String userId = uuid.v4();
     userCollection
@@ -28,6 +28,7 @@ class DBService {
           'userBio': "",
           'numOfArticles': 0,
           'likedNews': strList,
+          'dislikedNews': strListt,
           'numScience': 0,
           'numFinance': 0,
           'numSports': 0,
@@ -50,31 +51,19 @@ class DBService {
   }
 
   Future deleteUser(String userId) async {
-    firestoreInstance
-        .collection("users")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("users").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.delete();
       });
     });
 
-    firestoreInstance
-        .collection("blog")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("blog").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.delete();
       });
     });
 
-    firestoreInstance
-        .collection("comment")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("comment").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.delete();
       });
@@ -82,11 +71,7 @@ class DBService {
   }
 
   Future deactivateUser(String userId, bool newValue) async {
-    firestoreInstance
-        .collection("users")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("users").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.update({
           'isActive': newValue,
@@ -94,11 +79,7 @@ class DBService {
       });
     });
 
-    firestoreInstance
-        .collection("blog")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("blog").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.update({
           'isActive': newValue,
@@ -106,11 +87,7 @@ class DBService {
       });
     });
 
-    firestoreInstance
-        .collection("comment")
-        .where("userId", isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("comment").where("userId", isEqualTo: userId).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         result.reference.update({
           'isActive': newValue,
@@ -128,7 +105,8 @@ class DBService {
         .then((querySnapshot) {
       user = Users.fromJson(querySnapshot.docs.first.data());
       print("I received that user from database: " + user!.userName);
-    }).catchError((error) => print('Error: ${error.toString()}'));
+    })
+        .catchError((error) => print('Error: ${error.toString()}'));
     return user;
   }
 
@@ -160,6 +138,17 @@ class DBService {
     return allNews;
   }
 
+  /*Future getComments(List<Comment> comments) async {
+    firestoreInstance.collection("comment").get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        Comment tempComment = Comment.fromJson(result.data());
+        comments.add(tempComment);
+        print(comments[0].content);
+      });
+    });
+    return comments;
+  }*/
+
   Future getComments(List<Comment> comments, String id, bool isBlog) async {
     comments.clear();
     var type;
@@ -169,11 +158,7 @@ class DBService {
       type = "newsId";
     }
     print(id);
-    firestoreInstance
-        .collection("comment")
-        .where(type, isEqualTo: id)
-        .get()
-        .then((querySnapshot) {
+    firestoreInstance.collection("comment").where('newsId', isEqualTo: id).get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
         Comment tempComment = Comment.fromJson(result.data());
         comments.add(tempComment);
@@ -197,8 +182,7 @@ class DBService {
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future updateProfile(
-      String username, String userBio, String email, String token) async {
+  Future updateProfile(String username, String userBio, String email, String token) async {
     firestoreInstance.collection("users").doc(token).update({
       'username': username,
       'userBio': userBio,
@@ -214,8 +198,7 @@ class DBService {
     print("Updated");
   }
 
-  Future addComment(
-      String comment, String id, String userId, bool isBlog) async {
+  Future addComment(String comment, String id, String userId, bool isBlog) async {
     var data;
     var uuid = Uuid();
     final String commentId = uuid.v4();
@@ -244,7 +227,7 @@ class DBService {
           .catchError((error) => print('Error: ${error.toString()}'));
     }
   }
-
+  
   Future<DateTime>? lastBlogDate(String userID) async {
     DateTime recentUpload = new DateTime(2021);
     await firestoreInstance
@@ -253,15 +236,16 @@ class DBService {
         .where('userId', isEqualTo: userID)
         .get()
         .then((querySnapshot) {
-      Blog tempBlog = Blog.fromJson(querySnapshot.docs.first.data());
-      recentUpload = tempBlog.uploadDate;
-      print("inside lastBlogDate, recentUpload: " + recentUpload.toString());
-    }).catchError((error) => print('Error: ${error.toString()}'));
+            Blog tempBlog = Blog.fromJson(querySnapshot.docs.first.data());
+            recentUpload = tempBlog.uploadDate;
+            print("inside lastBlogDate, recentUpload: " + recentUpload.toString());
+          })
+        .catchError((error) => print('Error: ${error.toString()}'));
     return recentUpload;
   }
 
-  Future postBlogItem(String title, String content, String imageUrl,
-      List<String> categories, DateTime uploadDate, String userID) async {
+  Future postBlogItem(String title, String content, String imageUrl, List<String> categories, DateTime uploadDate,
+      String userID) async {
     var data;
     var uuid = Uuid();
     final String blogID = uuid.v4();
@@ -285,8 +269,9 @@ class DBService {
           .add(data)
           .then((value) => print('Blog posted by ' + userID))
           .catchError((error) => print('Error: ${error.toString()}'));
-    } else {
-      throw ("nein nein nein!!! you have already posted once today!!!");
+    }
+    else {
+      throw("nein nein nein!!! you have already posted once today!!!");
     }
   }
 
@@ -314,18 +299,32 @@ class DBService {
     });
   }
 
-  Future getBlogsById(String blogId, List<Blog> blogsById) async {
+  Future getBlogsById(String userId, List<Blog> blogsById) async {
     firestoreInstance
         .collection("blog")
-        .where('blogId', isEqualTo: blogId)
+        .where('userId', isEqualTo: userId)
         .get()
         .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) {
-            Blog tempBlog = Blog.fromJson(result.data());
-            blogsById.add(tempBlog);
-          });
-        })
+      querySnapshot.docs.forEach((result) {
+        Blog tempBlog = Blog.fromJson(result.data());
+        blogsById.add(tempBlog);
+      });
+    })
         .then((value) => print(blogsById[0].image as String))
+        .catchError((error) => print('Error: ${error.toString()}'));
+  }
+
+  Future getLikedItemIds(String userId, List<String> newsIds) async {
+    firestoreInstance
+        .collection("Users")
+        .where('userId', isEqualTo: userId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        newsIds = Users.fromJson(result.data()).likedNews!;
+      });
+    })
+        .then((value) => print(newsIds))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 }
