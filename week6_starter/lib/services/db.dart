@@ -148,6 +148,7 @@ class DBService {
   }*/
 
   Future getComments(List<Comment> comments, String id, bool isBlog) async {
+    comments.clear();
     var type;
     if (isBlog) {
       type = "blogId";
@@ -195,15 +196,15 @@ class DBService {
     print("Updated");
   }
 
-  Future addComment(String comment, String username, String id, String userId, bool isBlog) async {
+  Future addComment(String comment, String id, String userId, bool isBlog) async {
     var data;
     var uuid = Uuid();
     final String commentId = uuid.v4();
     if (isBlog) {
       data = {
         'blogId': id,
-        'username': username,
         'content': comment,
+        'isActive': true,
         'newsId': "",
         'userId': userId,
         'commentId': commentId,
@@ -211,8 +212,8 @@ class DBService {
     } else {
       data = {
         'blogId': "",
-        'username': username,
         'content': comment,
+        'isActive': true,
         'newsId': id,
         'userId': userId,
         'commentId': commentId,
@@ -256,6 +257,7 @@ class DBService {
         'category': categories,
         'content': content,
         'image': imageUrl,
+        'isActive': true,
         'title': title,
         'uploadDate': uploadDate,
         'userId': userID,
