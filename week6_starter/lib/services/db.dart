@@ -48,6 +48,52 @@ class DBService {
     });
   }
 
+  Future deleteUser(String userId) async {
+    firestoreInstance.collection("users").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.delete();
+      });
+    });
+
+    firestoreInstance.collection("blog").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.delete();
+      });
+    });
+
+    firestoreInstance.collection("comment").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.delete();
+      });
+    });
+  }
+
+  Future deactivateUser(String userId, bool newValue) async {
+    firestoreInstance.collection("users").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.update({
+          'isActive': newValue,
+        });
+      });
+    });
+
+    firestoreInstance.collection("blog").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.update({
+          'isActive': newValue,
+        });
+      });
+    });
+
+    firestoreInstance.collection("comment").where("userId", isEqualTo: userId).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        result.reference.update({
+          'isActive': newValue,
+        });
+      });
+    });
+  }
+
   Future<Users?> getUser(String userID) async {
     Users? user = null;
     await firestoreInstance

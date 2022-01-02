@@ -199,6 +199,58 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                 ),
                               ),
+                              SizedBox(height: 20,),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    border: Border.all(color: AppColors.darkBlue),
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Which action do you want to perform?"),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("Delete Account", style: GoogleFonts.nunito(
+                                                    color: Color(0xFFA01B10), fontWeight: FontWeight.bold, fontSize: 20),),
+                                                onPressed: () async {
+                                                  print("userclass userId: " + userClass.userId);
+                                                  await db.deleteUser(userClass.userId);
+                                                  await auth.deleteUser();
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text("Deactivate Account", style: GoogleFonts.nunito(
+                                                    color: Color(0xFF0B4BAD), fontWeight: FontWeight.bold, fontSize: 20),),
+                                                onPressed: () async {
+                                                  await db.deactivateUser(userClass.userId, false);
+                                                  await auth.signOut();
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        "Delete/Deactivate Account",
+                                        style: GoogleFonts.nunito(
+                                            color: Color(0xFFA01B10), fontWeight: FontWeight.bold, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           )
                         ],

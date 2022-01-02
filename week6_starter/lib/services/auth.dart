@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:week6_starter/models/Users.dart';
 
 import 'db.dart';
 
@@ -7,14 +8,15 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   DBService db = DBService();
 
-  User? _userFromFirebase(User? user) {//
+  User? _userFromFirebase(User? user) {
+    //
     return user ?? null;
   }
 
-  Stream<User?> get user {//
+  Stream<User?> get user {
+    //
     return _auth.authStateChanges().map(_userFromFirebase);
   }
-
 
   Future signInAnon() async {
     try {
@@ -37,18 +39,13 @@ class AuthService {
       db.addUserAutoID(username, mail, user.uid);
       print(user.toString());
       return _userFromFirebase(user);
-    } on FirebaseAuthException catch(e)
-    {
-
+    } on FirebaseAuthException catch (e) {
       print("*******signup catch:********" + e.toString());
-      if(e.code == 'email-already-in-use')
-      {
-        return("1");
+      if (e.code == 'email-already-in-use') {
+        return ("1");
         //setmessage("This email is already in use");
-      }
-      else if(e.code == 'weak-password')
-      {
-        return("2");
+      } else if (e.code == 'weak-password') {
+        return ("2");
         //setmessage("Weak password");  //burayi biraktim
       }
     } catch (e) {
@@ -61,18 +58,28 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(email: mail, password: pass);
       User user = result.user!;
-      print(user.toString());
+      late Users userClass;
+      await db.firestoreInstance
+          .collection("users")
+          .where('userToken', isEqualTo: user.uid)
+          .get()
+          .then((querySnapshot) {
+        userClass = Users.fromJson(querySnapshot.docs.first.data());
+        print("I received that user from database: " + userClass.userName);
+      });
+      print(userClass.toString());
+      if (!userClass.isActive) {
+        db.deactivateUser(userClass.userId, true);
+      }
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.code.toString());
-      if(e.code.toString() == 'user-not-found' || e.code.toString() == 'wrong-password') {
+      if (e.code.toString() == 'user-not-found' || e.code.toString() == 'wrong-password') {
         //signupWithMailAndPass(mail, pass);
-        return("3");
+        return ("3");
+      } else if (e.code.toString() == 'too-many-requests') {
+        return ("4");
       }
-      else if(e.code.toString() == 'too-many-requests')
-        {
-          return("4");
-        }
     } catch (e) {
       print(e.toString());
       return null;
@@ -109,7 +116,7 @@ class AuthService {
       return null;
     }
   }
-  
+
   Future<bool> updatePass(String oldPass, String newPass) async {
     bool isSuccess = false;
     final user = _auth.currentUser;
@@ -125,5 +132,10 @@ class AuthService {
       isSuccess = false;
     });
     return isSuccess;
+  }
+
+  Future deleteUser() async {
+    User user = await FirebaseAuth.instance.currentUser!;
+    user.delete();
   }
 }
