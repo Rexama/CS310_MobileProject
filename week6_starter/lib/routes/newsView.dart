@@ -22,12 +22,7 @@ import 'package:comment_box/main.dart';
 
 class NewsView extends StatefulWidget {
   @override
-  const NewsView(
-      {Key? key,
-      required this.analytics,
-      required this.observer,
-      required this.content})
-      : super(key: key);
+  const NewsView({Key? key, required this.analytics, required this.observer, required this.content}) : super(key: key);
 
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -39,7 +34,8 @@ class NewsView extends StatefulWidget {
 class _NewsView extends State<NewsView> {
   List<Comment> comments = [];
   DBService db = DBService();
-  late Timer _timer;
+
+  //late Future _future = db.getComments(comments, widget.content.newsId, false);
   String comment = "";
 
   @override
@@ -49,6 +45,7 @@ class _NewsView extends State<NewsView> {
         this.comments = comments;
       });
     });
+    super.initState();
   }
 
   @override
@@ -62,11 +59,9 @@ class _NewsView extends State<NewsView> {
 
     return FutureBuilder(
         future: db.userCollection.doc(user!.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass =
-                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: AppColors.darkBlue,
@@ -95,10 +90,8 @@ class _NewsView extends State<NewsView> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           //let's add the height
-                          image: DecorationImage(
-                              image:
-                                  NetworkImage(widget.content.image.toString()),
-                              fit: BoxFit.cover),
+                          image:
+                              DecorationImage(image: NetworkImage(widget.content.image.toString()), fit: BoxFit.cover),
                           border: Border.all(
                             color: AppColors.midBlue,
                             width: 3,
@@ -145,30 +138,56 @@ class _NewsView extends State<NewsView> {
                         shrinkWrap: true,
                         itemCount: comments.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                              title: Text(
-                                comments[index].username,
-                                //comments[index].username,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Text(comments[index]
-                                      .content //comments[index].content),
-                                  ));
+                          return FutureBuilder(
+                              future: db.getUser(comments[index].userId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done) {
+                                  Users user = snapshot.data! as Users;
+                                  if (user.isActive) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              user.userName,
+                                              style: GoogleFonts.nunito(
+                                                color: AppColors.darkestBlue,
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 22,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.all(10),
+                                            child: Text(
+                                              comments[index].content,
+                                              style: GoogleFonts.nunito(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17.0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }
+                                return CircularProgressIndicator();
+                              });
                         },
                       ),
-
-                      /*comments.length > 0
-                    ? ListTile(
-                        title: Text(
-                          comments[0].username, //comments[index].username,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle:
-                            Text(comments[0].content //comments[index].content),
-                                ))
-                    : SizedBox(
-                        height: 2,
-                      ),*/
                       SizedBox(
                         height: 15.0,
                       ),
@@ -191,9 +210,13 @@ class _NewsView extends State<NewsView> {
                             primary: AppColors.midBlue,
                           ),
                           child: Text("Comment"),
-                          onPressed: () {
-                            db.addComment(comment, userClass.userName,
-                                widget.content.newsId, comment, false);
+                          onPressed: () async {
+                            await db.addComment(comment, widget.content.newsId, userClass.userId, false);
+                            await db.getComments(comments, widget.content.newsId, false).then((data) {
+                              setState(() {
+                                this.comments = comments;
+                              });
+                            });
                             //update view
                           }),
                     ],

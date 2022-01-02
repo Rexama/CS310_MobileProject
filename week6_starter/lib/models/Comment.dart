@@ -1,5 +1,5 @@
 class Comment {
-  late String username;
+  late String userId;
   late String content;
   late bool isActive;
   late String? newsId;
@@ -7,7 +7,7 @@ class Comment {
   late String commentId;
 
   Comment(String userId, String content, bool isActive, String newsId, String blogId, String commentId) {
-    this.username = username;
+    this.userId = userId;
     this.content = content;
     this.isActive = isActive;
     this.newsId = newsId;
@@ -16,7 +16,7 @@ class Comment {
   }
 
   Comment.fromJson(Map<String, dynamic> json)
-      : username = json['username'],
+      : userId = json['userId'],
         content = json['content'],
         isActive = json['isActive'],
         newsId = json['newsId'],
@@ -24,7 +24,7 @@ class Comment {
         commentId = json['commentId'];
 
   Map<String, dynamic> toJson() => {
-        'userId': username,
+        'userId': userId,
         'content': content,
         'isActive': isActive,
         'newsId': newsId,
