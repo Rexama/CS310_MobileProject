@@ -10,7 +10,8 @@ class DBService {
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
-    List<dynamic> strList = [];
+    List<String> strList = [];
+    List<String> strListt = [];
     var uuid = Uuid();
     final String userId = uuid.v4();
     userCollection
@@ -27,6 +28,7 @@ class DBService {
           'userBio': "",
           'numOfArticles': 0,
           'likedNews': strList,
+          'dislikedNews': strListt,
           'numScience': 0,
           'numFinance': 0,
           'numSports': 0,
@@ -295,7 +297,7 @@ class DBService {
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
-        newsIds = Users.fromJson(result.data()).likedNews;
+        newsIds = Users.fromJson(result.data()).likedNews!;
       });
     })
         .then((value) => print(newsIds))

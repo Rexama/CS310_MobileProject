@@ -7,8 +7,8 @@ class Users {
   late String? userBio;
   late String userPw;
   late int numOfArticles;
-  late List<String> likedNews;
-  late List<String> dislikedNews;
+  late List<String>? likedNews;
+  late List<String>? dislikedNews;
   late String userToken;
   late String email;
   late int numScience;
