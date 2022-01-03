@@ -31,7 +31,7 @@ class _BlogFeedView extends State<BlogFeedView> {
   DBService db = DBService();
   List<Blog> allBlogs = [];
   late Future _future = db.getBlogs(allBlogs);
-
+  bool isAnon = false;
   int currentIndex = 0;
 
   @override
@@ -42,6 +42,10 @@ class _BlogFeedView extends State<BlogFeedView> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
+    if(user!.isAnonymous)
+    {
+      isAnon = true;
+    }
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
@@ -85,16 +89,39 @@ class _BlogFeedView extends State<BlogFeedView> {
                             if (allBlogs[index].isActive) {
                               return InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlogView(
-                                                analytics: widget.analytics,
-                                                observer: widget.observer,
-                                                content: allBlogs[index]),
-                                      ),
-                                    );
+                                    if(!isAnon)
+                                      {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BlogView(
+                                                    analytics: widget.analytics,
+                                                    observer: widget.observer,
+                                                    content: allBlogs[index]),
+                                          ),
+                                        );
+                                      } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("You must be signed in to see details of a blog"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    auth.signOut();
+                                                    Navigator.pushNamed(context, '/login');
+                                                  },
+                                                  child: Text(
+                                                    'Get me to the login page',
+                                                    style: TextStyle(fontSize: 20),
+                                                  ),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    }
                                   },
                                   child: Container(
                                     height: 170,

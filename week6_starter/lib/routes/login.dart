@@ -25,7 +25,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _message = "a";
+  String _message = "";
   String mail = "";
   String pass = "";
   late int count;

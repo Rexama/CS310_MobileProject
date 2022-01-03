@@ -117,9 +117,12 @@ class AuthService {
     // Once signed in, return the UserCredential
     print(credential.toString());
     UserCredential result = await FirebaseAuth.instance.signInWithCredential(credential);
+    bool isUserNew = result.additionalUserInfo!.isNewUser;
+
     User? user = result.user;
     print(user.toString());
-    if(user!.displayName != null)
+
+    if(user!.displayName != null && isUserNew)
     {
       db.addUserAutoID(user.displayName!, user.email!, user.uid!);
     }
