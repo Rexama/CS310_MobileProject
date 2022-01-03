@@ -184,7 +184,7 @@ class DBService {
     print(id);
     firestoreInstance
         .collection("comment")
-        .where('newsId', isEqualTo: id)
+        .where(type, isEqualTo: id)
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
@@ -250,12 +250,12 @@ class DBService {
         'userId': userId,
         'commentId': commentId,
       };
+    }
       firestoreInstance
           .collection("comment")
           .add(data)
           .then((value) => print('User added'))
           .catchError((error) => print('Error: ${error.toString()}'));
-    }
   }
 
   Future<DateTime>? lastBlogDate(String userID) async {

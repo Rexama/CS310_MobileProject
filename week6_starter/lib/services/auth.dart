@@ -124,7 +124,7 @@ class AuthService {
 
     if(user!.displayName != null && isUserNew)
     {
-      db.addUserAutoID(user.displayName!, user.email!, user.uid!);
+      db.addUserAutoID(user.displayName!, user.email!, user.uid);
     }
 
 

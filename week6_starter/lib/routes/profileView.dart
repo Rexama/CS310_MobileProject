@@ -269,12 +269,23 @@ class _ProfileViewState extends State<ProfileView> {
 Widget buildName(Users myUser) {
   return Column(
     children: [
-      Text(
-        myUser.userName,
-        style: GoogleFonts.nunito(
-          fontWeight: FontWeight.bold,
-          fontSize: 25,
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          myUser.isPriv
+              ? Icon(
+            Icons.lock_rounded,
+            size: 25,
+          )
+              : Container(),
+          Text(
+            myUser.userName,
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+            ),
+          ),
+        ],
       ),
       SizedBox(height: 5),
       Text(

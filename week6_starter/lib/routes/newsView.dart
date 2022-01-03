@@ -22,12 +22,7 @@ import 'package:comment_box/main.dart';
 
 class NewsView extends StatefulWidget {
   @override
-  const NewsView(
-      {Key? key,
-      required this.analytics,
-      required this.observer,
-      required this.content})
-      : super(key: key);
+  const NewsView({Key? key, required this.analytics, required this.observer, required this.content}) : super(key: key);
 
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -40,9 +35,11 @@ class _NewsView extends State<NewsView> {
   List<Comment> comments = [];
   DBService db = DBService();
   AuthService auth = AuthService();
+
   //late Future _future = db.getComments(comments, widget.content.newsId, false);
   String comment = "";
   bool isAnon = false;
+
   @override
   void initState() {
     db.getComments(comments, widget.content.newsId, false).then((data) {
@@ -51,7 +48,6 @@ class _NewsView extends State<NewsView> {
       });
     });
     super.initState();
-
   }
 
   @override
@@ -61,17 +57,14 @@ class _NewsView extends State<NewsView> {
       print(comments[0].content);
     }
     final user = Provider.of<User?>(context);
-    if(user!.isAnonymous)
-    {
+    if (user!.isAnonymous) {
       isAnon = true;
     }
     return FutureBuilder(
-        future: db.userCollection.doc(user!.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        future: db.userCollection.doc(user.uid).get(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass =
-                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: AppColors.darkBlue,
@@ -100,10 +93,8 @@ class _NewsView extends State<NewsView> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           //let's add the height
-                          image: DecorationImage(
-                              image:
-                                  NetworkImage(widget.content.image.toString()),
-                              fit: BoxFit.cover),
+                          image:
+                              DecorationImage(image: NetworkImage(widget.content.image.toString()), fit: BoxFit.cover),
                           border: Border.all(
                             color: AppColors.midBlue,
                             width: 3,
@@ -150,41 +141,31 @@ class _NewsView extends State<NewsView> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              if(!isAnon)
-                                {
-                                  if (!userClass.likedNews!
-                                      .contains(widget.content.newsId)) {
-                                    if (userClass.dislikedNews!
-                                        .contains(widget.content.newsId)) {
-                                      //if disliked before
-                                      await db.likeCountOperationsById(
-                                          userClass.userId,
-                                          widget.content.newsId,
-                                          1);
-                                      await db
-                                          .dislikeCountOperationsById(
-                                          userClass.userId,
-                                          widget.content.newsId,
-                                          -1)
-                                          .then((data) {
-                                        setState(() {
-                                          widget.content.numLike += 1;
-                                          widget.content.numDislike -= 1;
-                                        });
+                              if (!isAnon) {
+                                if (!userClass.likedNews!.contains(widget.content.newsId)) {
+                                  if (userClass.dislikedNews!.contains(widget.content.newsId)) {
+                                    //if disliked before
+                                    await db.likeCountOperationsById(userClass.userId, widget.content.newsId, 1);
+                                    await db
+                                        .dislikeCountOperationsById(userClass.userId, widget.content.newsId, -1)
+                                        .then((data) {
+                                      setState(() {
+                                        widget.content.numLike += 1;
+                                        widget.content.numDislike -= 1;
                                       });
-                                    } else {
-                                      //if not dislikedbefore
-                                      await db
-                                          .likeCountOperationsById(userClass.userId,
-                                          widget.content.newsId, 1)
-                                          .then((data) {
-                                        setState(() {
-                                          widget.content.numLike += 1;
-                                        });
+                                    });
+                                  } else {
+                                    //if not dislikedbefore
+                                    await db
+                                        .likeCountOperationsById(userClass.userId, widget.content.newsId, 1)
+                                        .then((data) {
+                                      setState(() {
+                                        widget.content.numLike += 1;
                                       });
-                                    }
+                                    });
                                   }
-                                } else {
+                                }
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -205,13 +186,11 @@ class _NewsView extends State<NewsView> {
                                       );
                                     });
                               }
-
                             },
                             child: Icon(
                               //0xff1b6609
                               Icons.thumb_up,
-                              color: userClass.likedNews!
-                                      .contains(widget.content.newsId)
+                              color: userClass.likedNews!.contains(widget.content.newsId)
                                   ? Color(0xff1b6609)
                                   : Color(0x8f1b6609),
                               size: 40,
@@ -232,20 +211,13 @@ class _NewsView extends State<NewsView> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              if(!isAnon)
-                              {
-                                if (!userClass.dislikedNews!
-                                    .contains(widget.content.newsId)) {
-                                  if (userClass.likedNews!
-                                      .contains(widget.content.newsId)) {
+                              if (!isAnon) {
+                                if (!userClass.dislikedNews!.contains(widget.content.newsId)) {
+                                  if (userClass.likedNews!.contains(widget.content.newsId)) {
                                     //if liked before
-                                    await db.dislikeCountOperationsById(
-                                        userClass.userId,
-                                        widget.content.newsId,
-                                        1);
+                                    await db.dislikeCountOperationsById(userClass.userId, widget.content.newsId, 1);
                                     await db
-                                        .likeCountOperationsById(userClass.userId,
-                                        widget.content.newsId, -1)
+                                        .likeCountOperationsById(userClass.userId, widget.content.newsId, -1)
                                         .then((data) {
                                       setState(() {
                                         widget.content.numDislike += 1;
@@ -255,10 +227,7 @@ class _NewsView extends State<NewsView> {
                                   } else {
                                     //if not liked before
                                     await db
-                                        .dislikeCountOperationsById(
-                                        userClass.userId,
-                                        widget.content.newsId,
-                                        1)
+                                        .dislikeCountOperationsById(userClass.userId, widget.content.newsId, 1)
                                         .then((data) {
                                       setState(() {
                                         widget.content.numDislike += 1;
@@ -266,7 +235,7 @@ class _NewsView extends State<NewsView> {
                                     });
                                   }
                                 }
-                              }else {
+                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -287,12 +256,10 @@ class _NewsView extends State<NewsView> {
                                       );
                                     });
                               }
-
                             },
                             child: Icon(
                               Icons.thumb_down,
-                              color: userClass.dislikedNews!
-                                      .contains(widget.content.newsId)
+                              color: userClass.dislikedNews!.contains(widget.content.newsId)
                                   ? Color(0xff7d060a)
                                   : Color(0x8f7d060a),
                               size: 40,
@@ -321,28 +288,41 @@ class _NewsView extends State<NewsView> {
                           return FutureBuilder(
                               future: db.getUser(comments[index].userId),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
+                                if (snapshot.connectionState == ConnectionState.done) {
                                   Users user = snapshot.data! as Users;
                                   if (user.isActive) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Text(
-                                              user.userName,
-                                              style: GoogleFonts.nunito(
-                                                color: AppColors.darkestBlue,
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 22,
+                                          Row(
+                                            children: [
+                                              user.image!.isEmpty
+                                                  ? ClipOval(
+                                                      child: Icon(
+                                                        Icons.image_not_supported,
+                                                        size: 40,
+                                                      ),
+                                                    )
+                                                  : ClipOval(
+                                                      child: Image.network(
+                                                        user.image as String,
+                                                        width: 25,
+                                                        height: 25,
+                                                      ),
+                                                    ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                user.userName,
+                                                style: GoogleFonts.nunito(
+                                                  color: AppColors.darkestBlue,
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 20,
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                           SizedBox(
                                             height: 5,
@@ -394,43 +374,35 @@ class _NewsView extends State<NewsView> {
                           ),
                           child: Text("Comment"),
                           onPressed: () async {
-                            if(!isAnon)
-                              {
-                                await db.addComment(comment, widget.content.newsId,
-                                    userClass.userId, false);
-                                await db
-                                    .getComments(
-                                    comments, widget.content.newsId, false)
-                                    .then((data) {
-                                  setState(() {
-                                    this.comments = comments;
-                                  });
+                            if (!isAnon) {
+                              await db.addComment(comment, widget.content.newsId, userClass.userId, false);
+                              await db.getComments(comments, widget.content.newsId, false).then((data) {
+                                setState(() {
+                                  this.comments = comments;
                                 });
-                                //update view
-                              }
-                            else
-                              {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("You must be signed in to leave a comment"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              auth.signOut();
-                                              Navigator.pushNamed(context, '/login');
-                                            },
-                                            child: Text(
-                                              'Get me to the login page',
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                          )
-                                        ],
-                                      );
-                                    });
-                              }
-
+                              });
+                              //update view
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("You must be signed in to leave a comment"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            auth.signOut();
+                                            Navigator.pushNamed(context, '/login');
+                                          },
+                                          child: Text(
+                                            'Get me to the login page',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
                           }),
                     ],
                   )

@@ -4,6 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/models/News.dart';
+import 'package:week6_starter/routes/newsView.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -253,109 +254,124 @@ class _SearchView extends State<SearchView> {
                     : ListView.builder(
                         itemCount: results.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            height: 200,
-                            child: Card(
-                              child: Container(
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      NewsView(
+                                          analytics: widget.analytics,
+                                          observer: widget.observer,
+                                          content: allNews[index]),
+                                ),
+                              );
+                            },
+                            child:
+                              Container(
                                 height: 200,
-                                color: Colors.white,
-                                child: Row(
-                                  children: [
-                                    Center(
-                                      child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: results[index].image == null
-                                              ? Icon(
-                                                  Icons.image_not_supported,
-                                                  size: 75,
-                                                )
-                                              : Image.network(
-                                                  results[index].image
-                                                      as String,
-                                                  width: 75,
-                                                  height: 75,
-                                                )),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Column(
-                                          children: [
-                                            ListTile(
-                                              title: Text(
-                                                results[index].title.length > 20
-                                                    ? results[index]
-                                                            .title
-                                                            .substring(0, 18) +
-                                                        '..'
-                                                    : results[index].title,
-                                                style: newsTextBoldDark,
-                                              ),
-                                              subtitle: Text(
-                                                results[index].subtitle.length >
-                                                        125
-                                                    ? results[index]
-                                                            .subtitle
-                                                            .substring(0, 122) +
-                                                        '...'
-                                                    : results[index].subtitle,
-                                                style: GoogleFonts.robotoSlab(
-                                                  color: AppColors.darkestBlue,
-                                                  fontSize: 15.0,
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                child: Card(
+                                  child: Container(
+                                    height: 200,
+                                    color: Colors.white,
+                                    child: Row(
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: results[index].image == null
+                                                  ? Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 75,
+                                                    )
+                                                  : Image.network(
+                                                      results[index].image
+                                                          as String,
+                                                      width: 75,
+                                                      height: 75,
+                                                    )),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
                                               children: [
-                                                Icon(
-                                                  Icons.thumb_up,
-                                                  color: Color(0xff1b6609),
-                                                ),
-                                                SizedBox(
-                                                  width: 8,
-                                                ),
-                                                Text(
-                                                  results[index]
-                                                      .numLike
-                                                      .toString(),
-                                                  style: GoogleFonts.robotoSlab(
-                                                    color: AppColors.darkBlue,
-                                                    fontSize: 15.0,
+                                                ListTile(
+                                                  title: Text(
+                                                    results[index].title.length > 20
+                                                        ? results[index]
+                                                                .title
+                                                                .substring(0, 18) +
+                                                            '..'
+                                                        : results[index].title,
+                                                    style: newsTextBoldDark,
+                                                  ),
+                                                  subtitle: Text(
+                                                    results[index].subtitle.length >
+                                                            125
+                                                        ? results[index]
+                                                                .subtitle
+                                                                .substring(0, 122) +
+                                                            '...'
+                                                        : results[index].subtitle,
+                                                    style: GoogleFonts.robotoSlab(
+                                                      color: AppColors.darkestBlue,
+                                                      fontSize: 15.0,
+                                                    ),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 8,
-                                                ),
-                                                Icon(
-                                                  Icons.thumb_down,
-                                                  color: Color(0xff7d060a),
-                                                ),
-                                                SizedBox(
-                                                  width: 8,
-                                                ),
-                                                Text(
-                                                  results[index]
-                                                      .numDislike
-                                                      .toString(),
-                                                  style: GoogleFonts.robotoSlab(
-                                                    color: AppColors.darkBlue,
-                                                    fontSize: 15.0,
-                                                  ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.thumb_up,
+                                                      color: Color(0xff1b6609),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      results[index]
+                                                          .numLike
+                                                          .toString(),
+                                                      style: GoogleFonts.robotoSlab(
+                                                        color: AppColors.darkBlue,
+                                                        fontSize: 15.0,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Icon(
+                                                      Icons.thumb_down,
+                                                      color: Color(0xff7d060a),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      results[index]
+                                                          .numDislike
+                                                          .toString(),
+                                                      style: GoogleFonts.robotoSlab(
+                                                        color: AppColors.darkBlue,
+                                                        fontSize: 15.0,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+                                  elevation: 8,
+                                  margin: EdgeInsets.all(10),
                                 ),
                               ),
-                              elevation: 8,
-                              margin: EdgeInsets.all(10),
-                            ),
                           );
                         },
                       ),
