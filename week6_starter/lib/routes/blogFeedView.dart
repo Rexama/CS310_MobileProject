@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/models/Blog.dart';
+import 'package:week6_starter/models/Users.dart';
 import 'package:week6_starter/routes/postBlogView.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
@@ -88,9 +89,10 @@ class _BlogFeedView extends State<BlogFeedView> {
                           itemBuilder: (BuildContext context, int index) {
                             if (allBlogs[index].isActive) {
                               return InkWell(
-                                  onTap: () {
+                                  onTap: () async {
                                     if(!isAnon)
                                       {
+                                        Users author = await db.getUser(allBlogs[index].userId) as Users;
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -98,7 +100,8 @@ class _BlogFeedView extends State<BlogFeedView> {
                                                 BlogView(
                                                     analytics: widget.analytics,
                                                     observer: widget.observer,
-                                                    content: allBlogs[index]),
+                                                    content: allBlogs[index],
+                                                    user: author),
                                           ),
                                         );
                                       } else {
@@ -208,11 +211,11 @@ class _BlogFeedView extends State<BlogFeedView> {
             ),
             floatingActionButton: FloatingActionButton(
               child: Icon(
-                Icons.add,
+                Icons.create,
                 color: AppColors.whiteBlue,
               ),
               onPressed: () {
-                if (!user!.isAnonymous) {
+                if (!user.isAnonymous) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
