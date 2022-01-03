@@ -16,9 +16,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/routes/editProfilePicture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditProfileView extends StatefulWidget {
-  const EditProfileView({Key? key}) : super(key: key);
+import 'changePass.dart';
 
+class EditProfileView extends StatefulWidget {
+  const EditProfileView({Key? key, required this.analytics, required this.observer})
+      : super(key: key);
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
   @override
   _EditProfileViewState createState() => _EditProfileViewState();
 }
@@ -144,7 +148,15 @@ class _EditProfileViewState extends State<EditProfileView> {
                         Navigator.pop(context);
                       }),
                   TextButton(
-                    onPressed: () async {},
+                    onPressed: () async {
+                      print("changepass clicked");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePass(analytics: widget.analytics, observer: widget.observer),
+                          ));
+                      //ChangePass(analytics: widget.analytics, observer: widget.observer);
+                    },
                     child: Center(
                       child: Text(
                         'Change Password',

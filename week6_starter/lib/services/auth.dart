@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:week6_starter/models/Users.dart';
 
@@ -25,6 +26,7 @@ class AuthService {
       db.addUserAutoID("anonymous", "anonymous", user.uid);
 
       print(user.toString());
+      print("LOGIN USER:" + user.toString());
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -71,6 +73,7 @@ class AuthService {
       if (!userClass.isActive) {
         db.deactivateUser(userClass.userId, true);
       }
+      print("LOGIN USER:" + user.toString());
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       print(e.code.toString());
@@ -83,6 +86,18 @@ class AuthService {
     } catch (e) {
       print(e.toString());
       return null;
+    }
+  }
+
+  Future updatePass(String newPass) async
+  {
+    print("newPass: " + newPass);
+    try{
+      var a = _auth.currentUser!.updatePassword(newPass);
+      print("UPDATE PASS RES: "+ a.toString());
+    }
+    catch(e){
+      print("PASSWORDUPDATE ERROR: "+ e.toString());
     }
   }
 
@@ -104,6 +119,12 @@ class AuthService {
     UserCredential result = await FirebaseAuth.instance.signInWithCredential(credential);
     User? user = result.user;
     print(user.toString());
+    if(user!.displayName != null)
+    {
+      db.addUserAutoID(user.displayName!, user.email!, user.uid!);
+    }
+
+
     return _userFromFirebase(user);
   }
 
@@ -117,22 +138,6 @@ class AuthService {
     }
   }
 
-  Future<bool> updatePass(String oldPass, String newPass) async {
-    bool isSuccess = false;
-    final user = _auth.currentUser;
-    final credentials = EmailAuthProvider.credential(email: user!.email!, password: oldPass);
-
-    await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credentials).then((value) async {
-      await user.updatePassword(newPass).then((value) {
-        isSuccess = true;
-      }).catchError((error) {
-        isSuccess = false;
-      });
-    }).catchError((error) {
-      isSuccess = false;
-    });
-    return isSuccess;
-  }
 
   Future deleteUser() async {
     User user = await FirebaseAuth.instance.currentUser!;

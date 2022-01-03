@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -27,7 +29,7 @@ class _FeedView extends State<FeedView> {
   AuthService auth = AuthService();
   DBService db = DBService();
   List<News> allNews = [];
-
+  bool isAnon = false;
   late Future _future = db.getNews(allNews);
 
   int currentIndex = 0;
@@ -37,8 +39,14 @@ class _FeedView extends State<FeedView> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User?>(context);
+    if(user!.isAnonymous)
+      {
+        isAnon = true;
+      }
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {

@@ -39,10 +39,10 @@ class NewsView extends StatefulWidget {
 class _NewsView extends State<NewsView> {
   List<Comment> comments = [];
   DBService db = DBService();
-
+  AuthService auth = AuthService();
   //late Future _future = db.getComments(comments, widget.content.newsId, false);
   String comment = "";
-
+  bool isAnon = false;
   @override
   void initState() {
     db.getComments(comments, widget.content.newsId, false).then((data) {
@@ -51,6 +51,7 @@ class _NewsView extends State<NewsView> {
       });
     });
     super.initState();
+
   }
 
   @override
@@ -59,9 +60,11 @@ class _NewsView extends State<NewsView> {
     if (comments.length > 1) {
       print(comments[0].content);
     }
-    print("aa");
     final user = Provider.of<User?>(context);
-
+    if(user!.isAnonymous)
+    {
+      isAnon = true;
+    }
     return FutureBuilder(
         future: db.userCollection.doc(user!.uid).get(),
         builder:
@@ -147,38 +150,62 @@ class _NewsView extends State<NewsView> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              if (!userClass.likedNews!
-                                  .contains(widget.content.newsId)) {
-                                if (userClass.dislikedNews!
-                                    .contains(widget.content.newsId)) {
-                                  //if disliked before
-                                  await db.likeCountOperationsById(
-                                      userClass.userId,
-                                      widget.content.newsId,
-                                      1);
-                                  await db
-                                      .dislikeCountOperationsById(
+                              if(!isAnon)
+                                {
+                                  if (!userClass.likedNews!
+                                      .contains(widget.content.newsId)) {
+                                    if (userClass.dislikedNews!
+                                        .contains(widget.content.newsId)) {
+                                      //if disliked before
+                                      await db.likeCountOperationsById(
+                                          userClass.userId,
+                                          widget.content.newsId,
+                                          1);
+                                      await db
+                                          .dislikeCountOperationsById(
                                           userClass.userId,
                                           widget.content.newsId,
                                           -1)
-                                      .then((data) {
-                                    setState(() {
-                                      widget.content.numLike += 1;
-                                      widget.content.numDislike -= 1;
-                                    });
-                                  });
-                                } else {
-                                  //if not dislikedbefore
-                                  await db
-                                      .likeCountOperationsById(userClass.userId,
+                                          .then((data) {
+                                        setState(() {
+                                          widget.content.numLike += 1;
+                                          widget.content.numDislike -= 1;
+                                        });
+                                      });
+                                    } else {
+                                      //if not dislikedbefore
+                                      await db
+                                          .likeCountOperationsById(userClass.userId,
                                           widget.content.newsId, 1)
-                                      .then((data) {
-                                    setState(() {
-                                      widget.content.numLike += 1;
+                                          .then((data) {
+                                        setState(() {
+                                          widget.content.numLike += 1;
+                                        });
+                                      });
+                                    }
+                                  }
+                                } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("You must be signed in to leave a like"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              auth.signOut();
+                                              Navigator.pushNamed(context, '/login');
+                                            },
+                                            child: Text(
+                                              'Get me to the login page',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          )
+                                        ],
+                                      );
                                     });
-                                  });
-                                }
                               }
+
                             },
                             child: Icon(
                               //0xff1b6609
@@ -205,38 +232,62 @@ class _NewsView extends State<NewsView> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              if (!userClass.dislikedNews!
-                                  .contains(widget.content.newsId)) {
-                                if (userClass.likedNews!
+                              if(!isAnon)
+                              {
+                                if (!userClass.dislikedNews!
                                     .contains(widget.content.newsId)) {
-                                  //if liked before
-                                  await db.dislikeCountOperationsById(
-                                      userClass.userId,
-                                      widget.content.newsId,
-                                      1);
-                                  await db
-                                      .likeCountOperationsById(userClass.userId,
-                                          widget.content.newsId, -1)
-                                      .then((data) {
-                                    setState(() {
-                                      widget.content.numDislike += 1;
-                                      widget.content.numLike -= 1;
+                                  if (userClass.likedNews!
+                                      .contains(widget.content.newsId)) {
+                                    //if liked before
+                                    await db.dislikeCountOperationsById(
+                                        userClass.userId,
+                                        widget.content.newsId,
+                                        1);
+                                    await db
+                                        .likeCountOperationsById(userClass.userId,
+                                        widget.content.newsId, -1)
+                                        .then((data) {
+                                      setState(() {
+                                        widget.content.numDislike += 1;
+                                        widget.content.numLike -= 1;
+                                      });
                                     });
-                                  });
-                                } else {
-                                  //if not liked before
-                                  await db
-                                      .dislikeCountOperationsById(
-                                          userClass.userId,
-                                          widget.content.newsId,
-                                          1)
-                                      .then((data) {
-                                    setState(() {
-                                      widget.content.numDislike += 1;
+                                  } else {
+                                    //if not liked before
+                                    await db
+                                        .dislikeCountOperationsById(
+                                        userClass.userId,
+                                        widget.content.newsId,
+                                        1)
+                                        .then((data) {
+                                      setState(() {
+                                        widget.content.numDislike += 1;
+                                      });
                                     });
-                                  });
+                                  }
                                 }
+                              }else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("You must be signed in to leave a dislike"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              auth.signOut();
+                                              Navigator.pushNamed(context, '/login');
+                                            },
+                                            child: Text(
+                                              'Get me to the login page',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    });
                               }
+
                             },
                             child: Icon(
                               Icons.thumb_down,
@@ -343,17 +394,43 @@ class _NewsView extends State<NewsView> {
                           ),
                           child: Text("Comment"),
                           onPressed: () async {
-                            await db.addComment(comment, widget.content.newsId,
-                                userClass.userId, false);
-                            await db
-                                .getComments(
+                            if(!isAnon)
+                              {
+                                await db.addComment(comment, widget.content.newsId,
+                                    userClass.userId, false);
+                                await db
+                                    .getComments(
                                     comments, widget.content.newsId, false)
-                                .then((data) {
-                              setState(() {
-                                this.comments = comments;
-                              });
-                            });
-                            //update view
+                                    .then((data) {
+                                  setState(() {
+                                    this.comments = comments;
+                                  });
+                                });
+                                //update view
+                              }
+                            else
+                              {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("You must be signed in to leave a comment"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              auth.signOut();
+                                              Navigator.pushNamed(context, '/login');
+                                            },
+                                            child: Text(
+                                              'Get me to the login page',
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    });
+                              }
+
                           }),
                     ],
                   )

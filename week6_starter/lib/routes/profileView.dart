@@ -53,7 +53,7 @@ class _ProfileViewState extends State<ProfileView> {
                             } else {
                               Navigator.of(context)
                                   .push(
-                                    MaterialPageRoute(builder: (context) => EditProfileView()),
+                                    MaterialPageRoute(builder: (context) => EditProfileView(analytics: widget.analytics, observer: widget.observer)),
                                   )
                                   .then((value) => {setState(() {})});
                             }
