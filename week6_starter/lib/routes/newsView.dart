@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -46,7 +47,8 @@ class _NewsView extends State<NewsView> {
       setState(() {
         this.comments = comments;
       });
-    }).whenComplete(() => super.initState());
+    });
+    super.initState();
   }
 
   @override
@@ -148,6 +150,7 @@ class _NewsView extends State<NewsView> {
                                     await db
                                         .dislikeCountOperationsById(userClass.userId, widget.content.newsId, -1)
                                         .then((data) {
+                                      sleep(Duration(milliseconds:250));
                                       setState(() {
                                         widget.content.numLike += 1;
                                         widget.content.numDislike -= 1;
@@ -158,6 +161,7 @@ class _NewsView extends State<NewsView> {
                                     await db
                                         .likeCountOperationsById(userClass.userId, widget.content.newsId, 1)
                                         .then((data) {
+                                      sleep(Duration(milliseconds:250));
                                       setState(() {
                                         widget.content.numLike += 1;
                                       });
@@ -218,6 +222,7 @@ class _NewsView extends State<NewsView> {
                                     await db
                                         .likeCountOperationsById(userClass.userId, widget.content.newsId, -1)
                                         .then((data) {
+                                      sleep(Duration(milliseconds:250));
                                       setState(() {
                                         widget.content.numDislike += 1;
                                         widget.content.numLike -= 1;
@@ -228,6 +233,7 @@ class _NewsView extends State<NewsView> {
                                     await db
                                         .dislikeCountOperationsById(userClass.userId, widget.content.newsId, 1)
                                         .then((data) {
+                                      sleep(Duration(milliseconds:250));
                                       setState(() {
                                         widget.content.numDislike += 1;
                                       });
