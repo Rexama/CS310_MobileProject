@@ -46,8 +46,7 @@ class _NewsView extends State<NewsView> {
       setState(() {
         this.comments = comments;
       });
-    });
-    super.initState();
+    }).whenComplete(() => super.initState());
   }
 
   @override
