@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
     var res = await auth.loginWithMailAndPass(mail, pass);
 
     print("res print:" + res.toString());
-    if (res != null && res != "3" && res!= "4") //successful
+    if (res != null && res != "3" && res != "4") //successful
     {
       print("OK res print:" + res.toString());
     } else if (res == "3") {
@@ -208,7 +208,8 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       OutlinedButton(
                         onPressed: () {
-                          setLogEvent(widget.analytics, 'signup', _formKey.currentState!.validate());
+                          setLogEvent(widget.analytics, 'signup',
+                              _formKey.currentState!.validate());
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             print('Mail: ' + mail + "\nPass: " + pass);
