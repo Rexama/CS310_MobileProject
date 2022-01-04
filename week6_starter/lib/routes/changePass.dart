@@ -1,83 +1,45 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
-import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/services/auth.dart';
-import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/utils/color.dart';
 import 'package:week6_starter/utils/dimension.dart';
 import 'package:week6_starter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:week6_starter/routes/feedView.dart';
+import 'package:week6_starter/routes/navigationBar.dart';
 
-class SignUp extends StatefulWidget {
+class ChangePass extends StatefulWidget {
   @override
-  const SignUp({Key? key, required this.analytics, required this.observer})
+  const ChangePass({Key? key, required this.analytics, required this.observer})
       : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
-  _SignUpState createState() => _SignUpState();
+  _ChangePassState createState() => _ChangePassState();
 }
 
-class _SignUpState extends State<SignUp> {
-  final _formKey = GlobalKey<FormState>();
+class _ChangePassState extends State<ChangePass> {
   String _message = "";
   String mail = "";
-  String pass = "";
+  String newPass = "";
+  String oldPass = "";
   String tempPass = ""; //password confirm icin gerekli kurcalama
   String username = "";
-  String name = "";
   late int count;
+  final _formKey = GlobalKey<FormState>();
 
   AuthService auth = AuthService();
-  DBService db = DBService();
   //FirebaseAuth auth = FirebaseAuth.instance;
 
-  void setmessage(String msg) {
+  void setMessage(String msg) {
     setState(() {
       _message = msg;
     });
-  }
-
-  Future<void> signupUser() async {
-    var res = auth.signupWithMailAndPass(username, mail, pass);
-    //db.addUserAutoID(username, mail, 'token');
-
-    if(res != null && res != "1" && res != "2")
-    {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Sign Up Successful"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  child: Text(
-                    'OK',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                )
-              ],
-            );
-          });
-    }
-    else if(res == "1") {
-      setmessage("This email is already in use");
-    }
-    else if(res == "2"){
-      setmessage("Weak password");
-    }
-    else{
-      setmessage("An error has occurred");
-    }
-
   }
 
   @override
@@ -87,21 +49,35 @@ class _SignUpState extends State<SignUp> {
     count = 0;
   }
 
+  Future<void> changePassword(String mail, String oldpass, String newPass) async
+  {
+    var res = auth.loginWithMailAndPass(mail, oldpass);
+    bool flag = true;
+    print("res print:" + res.toString());
+    if (res != null && res != "3" && res!= "4") //successful
+        {
+      print("OK res print:" + res.toString());
+    } else if (res == "3") {
+      flag = false;
+      setMessage("Please check your e-mail and password");
+    } else {
+      flag = false;
+      setMessage("An error has occurred");
+    }
+    if(flag)
+      {
+        auth.updatePass(newPass);
+      }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context)
-              .push(
-            MaterialPageRoute(builder: (context) => Welcome(analytics: widget.analytics, observer: widget.observer)),
-          )
-              .then((value) => {setState(() {})}),
-        ),
         title: Text(
-          'SIGN UP',
+          'CHANGE PASSWORD',
           style: blogText,
         ),
         backgroundColor: AppColors.darkBlue,
@@ -119,14 +95,6 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 30,
                 ),
-                /*Container(
-                  height: 200,
-                  child: CircleAvatar(
-                    backgroundColor: AppColors.midBlue,
-                    radius: 80,
-                    backgroundImage: AssetImage('assets/login.jpg'),
-                  ),
-                ),*/ //from login
                 SizedBox(
                   height: 30,
                 ),
@@ -181,36 +149,37 @@ class _SignUpState extends State<SignUp> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: (TextStyle(color: AppColors.whiteBlue)),
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,
-                          hintText: 'User Name',
-                          hintStyle: TextStyle(
-                            color: AppColors.openBlue,
-                          ),
+                          hintText: 'Old Password',
+                          hintStyle: TextStyle(color: AppColors.openBlue),
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.midBlue),
+                            borderSide: BorderSide(color: AppColors.openBlue),
                           ),
                         ),
                         keyboardType: TextInputType.text,
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
                         validator: (value) {
+                          bool flag = true;
                           if (value == null) {
-                            return 'User Name cannot be empty.';
+                            flag = false;
+                            return 'Password field cannot be empty';
                           } else {
                             String trimmedValue = value.trim();
                             if (trimmedValue.isEmpty) {
-                              return 'User Name field cannot be empty';
+                              flag = false;
+                              return 'Password field cannot be empty';
                             }
-                            /*if (!EmailValidator.validate(trimmedValue)) { //from login
-                              return 'Please enter a valid email';
-                            }*/
                           }
                           return null;
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            username = value;
+                            oldPass = value;
                           }
                         },
                       ),
@@ -230,7 +199,7 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,
-                          hintText: 'Password',
+                          hintText: 'New Password',
                           hintStyle: TextStyle(color: AppColors.openBlue),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: AppColors.openBlue),
@@ -241,6 +210,7 @@ class _SignUpState extends State<SignUp> {
                         enableSuggestions: false,
                         autocorrect: false,
                         validator: (value) {
+
                           bool flag = true;
                           if (value == null) {
                             flag = false;
@@ -264,7 +234,7 @@ class _SignUpState extends State<SignUp> {
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            pass = value;
+                            newPass = value;
                           }
                         },
                       ),
@@ -284,7 +254,7 @@ class _SignUpState extends State<SignUp> {
                         decoration: InputDecoration(
                           fillColor: AppColors.darkestBlue,
                           filled: true,
-                          hintText: 'Confirm Password',
+                          hintText: 'Confirm New Password',
                           hintStyle: TextStyle(color: AppColors.openBlue),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: AppColors.openBlue),
@@ -297,20 +267,12 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value != tempPass) {
                             return 'Passwords must match.';
-                          } /* else { //from login
-                            String trimmedValue = value.trim();
-                            if (trimmedValue.isEmpty) {
-                              return 'Password field cannot be empty';
-                            }
-                            if (trimmedValue.length < 8) {
-                              return 'Password must be at least 8 characters long';
-                            }
-                          }*/
+                          }
                           return null;
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            pass = value;
+                            newPass = value;
                           }
                         },
                       ),
@@ -326,31 +288,12 @@ class _SignUpState extends State<SignUp> {
                   children: <Widget>[
                     OutlinedButton(
                       onPressed: () {
-                        setLogEvent(this.widget.analytics, 'signup', _formKey.currentState!.validate());
-                        if (_formKey.currentState!.validate()) {
-                          print('Mail: ' +
-                              mail +
-                              "\nUsername: " +
-                              username +
-                              "\nPass: " +
-                              pass);
-                          _formKey.currentState!.save();
-                          print('Mail: ' +
-                              mail +
-                              "\nUsername: " +
-                              username +
-                              "\nPass: " +
-                              pass);
-                          signupUser();
-                          setState(() {
-                            count += 1;
-                          });
-                        }
+                        changePassword(mail, oldPass, newPass);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Text(
-                          '   Sign Up   ', //Attempt: ${count!=null ? count:0}',
+                          '   Change Password   ', //Attempt: ${count!=null ? count:0}',
                           style: blogText,
                         ),
                       ),
@@ -361,9 +304,8 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 8,
                 ),
-
                 Text(
                   _message,
                   style: TextStyle(color: AppColors.whiteBlue),

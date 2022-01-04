@@ -16,8 +16,7 @@ import 'package:week6_starter/routes/editProfileView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
+  const ProfileView({Key? key, required this.analytics, required this.observer}) : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
@@ -36,11 +35,9 @@ class _ProfileViewState extends State<ProfileView> {
     print('user id: ${user!.uid}');
     return FutureBuilder(
         future: db.userCollection.doc(user.uid).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass =
-                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
               body: ListView(
                 physics: BouncingScrollPhysics(),
@@ -56,9 +53,7 @@ class _ProfileViewState extends State<ProfileView> {
                             } else {
                               Navigator.of(context)
                                   .push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditProfileView()),
+                                    MaterialPageRoute(builder: (context) => EditProfileView(analytics: widget.analytics, observer: widget.observer)),
                                   )
                                   .then((value) => {setState(() {})});
                             }
@@ -97,8 +92,7 @@ class _ProfileViewState extends State<ProfileView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -110,9 +104,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Text(
                                         "Favourites",
                                         style: GoogleFonts.nunito(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -120,8 +112,7 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                               const SizedBox(height: 20),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -133,9 +124,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Text(
                                         "My Posts",
                                         style: GoogleFonts.nunito(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -143,8 +132,7 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                               const SizedBox(height: 20),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -156,9 +144,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Text(
                                         "Read Counts",
                                         style: GoogleFonts.nunito(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -168,8 +154,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 height: 20,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -177,19 +162,14 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () async {
-                                      db.makeAccountPrivate(userClass.userToken,
-                                          !userClass.isPriv);
+                                      db.makeAccountPrivate(userClass.userToken, !userClass.isPriv);
                                       setState(() {});
                                     },
                                     child: Center(
                                       child: Text(
-                                        userClass.isPriv
-                                            ? "Make Account Public"
-                                            : "Make Account Private",
+                                        userClass.isPriv ? "Make Account Public" : "Make Account Private",
                                         style: GoogleFonts.nunito(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -197,15 +177,13 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                               const SizedBox(height: 35),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Container(
                                   height: 30,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: Colors.white,
-                                    border:
-                                        Border.all(color: AppColors.darkBlue),
+                                    border: Border.all(color: AppColors.darkBlue),
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () {
@@ -215,27 +193,21 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Text(
                                         "Sign Out",
                                         style: GoogleFonts.nunito(
-                                            color: AppColors.darkBlue,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: AppColors.darkBlue, fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
+                              SizedBox(height: 20,),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
                                 child: Container(
                                   height: 30,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: Colors.white,
-                                    border:
-                                        Border.all(color: AppColors.darkBlue),
+                                    border: Border.all(color: AppColors.darkBlue),
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () {
@@ -243,39 +215,23 @@ class _ProfileViewState extends State<ProfileView> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: Text(
-                                                "Which action do you want to perform?"),
+                                            title: Text("Which action do you want to perform?"),
                                             actions: [
                                               TextButton(
-                                                child: Text(
-                                                  "Delete Account",
-                                                  style: GoogleFonts.nunito(
-                                                      color: Color(0xFFA01B10),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
+                                                child: Text("Delete Account", style: GoogleFonts.nunito(
+                                                    color: Color(0xFFA01B10), fontWeight: FontWeight.bold, fontSize: 20),),
                                                 onPressed: () async {
-                                                  print("userclass userId: " +
-                                                      userClass.userId);
-                                                  await db.deleteUser(
-                                                      userClass.userId);
+                                                  print("userclass userId: " + userClass.userId);
+                                                  await db.deleteUser(userClass.userId);
                                                   await auth.deleteUser();
                                                   Navigator.of(context).pop();
                                                 },
                                               ),
                                               TextButton(
-                                                child: Text(
-                                                  "Deactivate Account",
-                                                  style: GoogleFonts.nunito(
-                                                      color: Color(0xFF0B4BAD),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20),
-                                                ),
+                                                child: Text("Deactivate Account", style: GoogleFonts.nunito(
+                                                    color: Color(0xFF0B4BAD), fontWeight: FontWeight.bold, fontSize: 20),),
                                                 onPressed: () async {
-                                                  await db.deactivateUser(
-                                                      userClass.userId, false);
+                                                  await db.deactivateUser(userClass.userId, false);
                                                   await auth.signOut();
                                                   Navigator.of(context).pop();
                                                 },
@@ -289,9 +245,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Text(
                                         "Delete/Deactivate Account",
                                         style: GoogleFonts.nunito(
-                                            color: Color(0xFFA01B10),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            color: Color(0xFFA01B10), fontWeight: FontWeight.bold, fontSize: 20),
                                       ),
                                     ),
                                   ),
@@ -315,12 +269,23 @@ class _ProfileViewState extends State<ProfileView> {
 Widget buildName(Users myUser) {
   return Column(
     children: [
-      Text(
-        myUser.userName,
-        style: GoogleFonts.nunito(
-          fontWeight: FontWeight.bold,
-          fontSize: 25,
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          myUser.isPriv
+              ? Icon(
+            Icons.lock_rounded,
+            size: 25,
+          )
+              : Container(),
+          Text(
+            myUser.userName,
+            style: GoogleFonts.nunito(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+            ),
+          ),
+        ],
       ),
       SizedBox(height: 5),
       Text(

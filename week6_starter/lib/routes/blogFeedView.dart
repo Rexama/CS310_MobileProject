@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/models/Blog.dart';
+import 'package:week6_starter/models/Users.dart';
 import 'package:week6_starter/routes/postBlogView.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
@@ -19,9 +20,7 @@ import 'package:intl/intl.dart';
 
 class BlogFeedView extends StatefulWidget {
   @override
-  const BlogFeedView(
-      {Key? key, required this.analytics, required this.observer})
-      : super(key: key);
+  const BlogFeedView({Key? key, required this.analytics, required this.observer}) : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
@@ -33,7 +32,7 @@ class _BlogFeedView extends State<BlogFeedView> {
   DBService db = DBService();
   List<Blog> allBlogs = [];
   late Future _future = db.getBlogs(allBlogs);
-
+  bool isAnon = false;
   int currentIndex = 0;
 
   @override
@@ -44,6 +43,10 @@ class _BlogFeedView extends State<BlogFeedView> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
+    if(user!.isAnonymous)
+    {
+      isAnon = true;
+    }
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
@@ -77,8 +80,7 @@ class _BlogFeedView extends State<BlogFeedView> {
             ),
             body: Padding(
               padding: Dimen.regularPadding,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Expanded(
                   child: allBlogs.isEmpty
                       ? Container()
@@ -87,16 +89,42 @@ class _BlogFeedView extends State<BlogFeedView> {
                           itemBuilder: (BuildContext context, int index) {
                             if (allBlogs[index].isActive) {
                               return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BlogView(
-                                            analytics: widget.analytics,
-                                            observer: widget.observer,
-                                            content: allBlogs[index]),
-                                      ),
-                                    );
+                                  onTap: () async {
+                                    if(!isAnon)
+                                      {
+                                        Users author = await db.getUser(allBlogs[index].userId) as Users;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BlogView(
+                                                    analytics: widget.analytics,
+                                                    observer: widget.observer,
+                                                    content: allBlogs[index],
+                                                    user: author),
+                                          ),
+                                        );
+                                      } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("You must be signed in to see details of a blog"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    auth.signOut();
+                                                    Navigator.pushNamed(context, '/login');
+                                                  },
+                                                  child: Text(
+                                                    'Get me to the login page',
+                                                    style: TextStyle(fontSize: 20),
+                                                  ),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    }
                                   },
                                   child: Container(
                                     height: 170,
@@ -109,20 +137,16 @@ class _BlogFeedView extends State<BlogFeedView> {
                                             Center(
                                               child: Padding(
                                                   padding: EdgeInsets.all(10),
-                                                  child: allBlogs[index]
-                                                          .image!
-                                                          .isEmpty
+                                                  child: allBlogs[index].image!.isEmpty
                                                       ? Icon(
-                                                          Icons
-                                                              .image_not_supported,
-                                                          size: 75,
-                                                        )
+                                                    Icons.image_not_supported,
+                                                    size: 75,
+                                                  )
                                                       : Image.network(
-                                                          allBlogs[index].image
-                                                              as String,
-                                                          width: 75,
-                                                          height: 75,
-                                                        )),
+                                                    allBlogs[index].image as String,
+                                                    width: 75,
+                                                    height: 75,
+                                                  )),
                                             ),
                                             Expanded(
                                               child: Container(
@@ -136,58 +160,31 @@ class _BlogFeedView extends State<BlogFeedView> {
                                                       dense: true,
                                                       //contentPadding: EdgeInsets.only(left: 20.0, right: 5.0),
                                                       contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 10.0,
-                                                              horizontal: 5.0),
+                                                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
                                                       title: Text(
-                                                        allBlogs[index]
-                                                                    .title
-                                                                    .length >
-                                                                20
-                                                            ? allBlogs[index]
-                                                                    .title
-                                                                    .substring(
-                                                                        0, 18) +
-                                                                '..'
-                                                            : allBlogs[index]
-                                                                .title,
+                                                        allBlogs[index].title.length > 20
+                                                            ? allBlogs[index].title.substring(0, 18) + '..'
+                                                            : allBlogs[index].title,
                                                         style: newsTextBoldDark,
                                                       ),
                                                       subtitle: Text(
-                                                        allBlogs[index]
-                                                                    .content
-                                                                    .length >
-                                                                125
-                                                            ? allBlogs[index]
-                                                                    .content
-                                                                    .substring(
-                                                                        0, 80) +
-                                                                '...'
-                                                            : allBlogs[index]
-                                                                .content,
-                                                        style: GoogleFonts
-                                                            .robotoSlab(
-                                                          color: AppColors
-                                                              .darkestBlue,
+                                                        allBlogs[index].content.length > 125
+                                                            ? allBlogs[index].content.substring(0, 80) + '...'
+                                                            : allBlogs[index].content,
+                                                        style: GoogleFonts.robotoSlab(
+                                                          color: AppColors.darkestBlue,
                                                           fontSize: 15.0,
                                                         ),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
+                                                      mainAxisAlignment: MainAxisAlignment.end,
                                                       children: [
                                                         Text(
-                                                          DateFormat()
-                                                              .format(allBlogs[
-                                                                      index]
-                                                                  .uploadDate)
-                                                              .toString(),
-                                                          style: GoogleFonts
-                                                              .robotoSlab(
-                                                            color: AppColors
-                                                                .darkBlue,
+                                                          DateFormat().format(allBlogs[index].uploadDate).toString(),
+                                                          style: GoogleFonts.robotoSlab(
+                                                            color: AppColors.darkBlue,
                                                             fontSize: 12.0,
                                                           ),
                                                         ),
@@ -214,11 +211,11 @@ class _BlogFeedView extends State<BlogFeedView> {
             ),
             floatingActionButton: FloatingActionButton(
               child: Icon(
-                Icons.add,
+                Icons.create,
                 color: AppColors.whiteBlue,
               ),
               onPressed: () {
-                if (!user!.isAnonymous) {
+                if (!user.isAnonymous) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(

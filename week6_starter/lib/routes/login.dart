@@ -3,6 +3,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
+import 'package:week6_starter/routes/welcome.dart';
 import 'package:week6_starter/services/analytics.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/utils/color.dart';
@@ -24,7 +25,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _message = "a";
+  String _message = "";
   String mail = "";
   String pass = "";
   late int count;
@@ -39,6 +40,13 @@ class _LoginState extends State<Login> {
     });
   }
 
+  /*changePassword() async {
+    try {
+      Stream<User?> currUser = auth.user;
+
+    }
+  }*/
+
   Future<void> loginUser() async {
     var res = await auth.loginWithMailAndPass(mail, pass);
 
@@ -51,6 +59,8 @@ class _LoginState extends State<Login> {
     } else {
       setMessage("An error has occurred");
     }
+
+
   }
 
   Future<void> logoutUser() async {
@@ -81,6 +91,14 @@ class _LoginState extends State<Login> {
       //FirebaseCrashlytics.instance.crash();
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context)
+                .push(
+              MaterialPageRoute(builder: (context) => Welcome(analytics: widget.analytics, observer: widget.observer)),
+            )
+                .then((value) => {setState(() {})}),
+          ),
           title: Text(
             'LOGIN',
             style: blogText,
