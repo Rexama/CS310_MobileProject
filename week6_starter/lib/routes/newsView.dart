@@ -23,7 +23,12 @@ import 'package:comment_box/main.dart';
 
 class NewsView extends StatefulWidget {
   @override
-  const NewsView({Key? key, required this.analytics, required this.observer, required this.content}) : super(key: key);
+  const NewsView(
+      {Key? key,
+      required this.analytics,
+      required this.observer,
+      required this.content})
+      : super(key: key);
 
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
@@ -63,9 +68,17 @@ class _NewsView extends State<NewsView> {
     }
     return FutureBuilder(
         future: db.userCollection.doc(user.uid).get(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            Users userClass =
+                Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
+            print(!userClass.visitedNews!.contains(widget.content.newsId));
+            if (!userClass.visitedNews!.contains(widget.content.newsId)) {
+              print(userClass.userId);
+              db.newArticleReading(widget.content.category, userClass.userId,
+                  widget.content.newsId);
+            }
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: AppColors.darkBlue,
@@ -94,8 +107,10 @@ class _NewsView extends State<NewsView> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           //let's add the height
-                          image:
-                              DecorationImage(image: NetworkImage(widget.content.image.toString()), fit: BoxFit.cover),
+                          image: DecorationImage(
+                              image:
+                                  NetworkImage(widget.content.image.toString()),
+                              fit: BoxFit.cover),
                           border: Border.all(
                             color: AppColors.midBlue,
                             width: 3,
@@ -143,14 +158,22 @@ class _NewsView extends State<NewsView> {
                           GestureDetector(
                             onTap: () async {
                               if (!isAnon) {
-                                if (!userClass.likedNews!.contains(widget.content.newsId)) {
-                                  if (userClass.dislikedNews!.contains(widget.content.newsId)) {
+                                if (!userClass.likedNews!
+                                    .contains(widget.content.newsId)) {
+                                  if (userClass.dislikedNews!
+                                      .contains(widget.content.newsId)) {
                                     //if disliked before
-                                    await db.likeCountOperationsById(userClass.userId, widget.content.newsId, 1);
+                                    await db.likeCountOperationsById(
+                                        userClass.userId,
+                                        widget.content.newsId,
+                                        1);
                                     await db
-                                        .dislikeCountOperationsById(userClass.userId, widget.content.newsId, -1)
+                                        .dislikeCountOperationsById(
+                                            userClass.userId,
+                                            widget.content.newsId,
+                                            -1)
                                         .then((data) {
-                                      sleep(Duration(milliseconds:250));
+                                      sleep(Duration(milliseconds: 250));
                                       setState(() {
                                         widget.content.numLike += 1;
                                         widget.content.numDislike -= 1;
@@ -159,9 +182,12 @@ class _NewsView extends State<NewsView> {
                                   } else {
                                     //if not dislikedbefore
                                     await db
-                                        .likeCountOperationsById(userClass.userId, widget.content.newsId, 1)
+                                        .likeCountOperationsById(
+                                            userClass.userId,
+                                            widget.content.newsId,
+                                            1)
                                         .then((data) {
-                                      sleep(Duration(milliseconds:250));
+                                      sleep(Duration(milliseconds: 250));
                                       setState(() {
                                         widget.content.numLike += 1;
                                       });
@@ -173,12 +199,14 @@ class _NewsView extends State<NewsView> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text("You must be signed in to leave a like"),
+                                        title: Text(
+                                            "You must be signed in to leave a like"),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
                                               auth.signOut();
-                                              Navigator.pushNamed(context, '/login');
+                                              Navigator.pushNamed(
+                                                  context, '/login');
                                             },
                                             child: Text(
                                               'Get me to the login page',
@@ -193,7 +221,8 @@ class _NewsView extends State<NewsView> {
                             child: Icon(
                               //0xff1b6609
                               Icons.thumb_up,
-                              color: userClass.likedNews!.contains(widget.content.newsId)
+                              color: userClass.likedNews!
+                                      .contains(widget.content.newsId)
                                   ? Color(0xff1b6609)
                                   : Color(0x8f1b6609),
                               size: 40,
@@ -215,14 +244,22 @@ class _NewsView extends State<NewsView> {
                           GestureDetector(
                             onTap: () async {
                               if (!isAnon) {
-                                if (!userClass.dislikedNews!.contains(widget.content.newsId)) {
-                                  if (userClass.likedNews!.contains(widget.content.newsId)) {
+                                if (!userClass.dislikedNews!
+                                    .contains(widget.content.newsId)) {
+                                  if (userClass.likedNews!
+                                      .contains(widget.content.newsId)) {
                                     //if liked before
-                                    await db.dislikeCountOperationsById(userClass.userId, widget.content.newsId, 1);
+                                    await db.dislikeCountOperationsById(
+                                        userClass.userId,
+                                        widget.content.newsId,
+                                        1);
                                     await db
-                                        .likeCountOperationsById(userClass.userId, widget.content.newsId, -1)
+                                        .likeCountOperationsById(
+                                            userClass.userId,
+                                            widget.content.newsId,
+                                            -1)
                                         .then((data) {
-                                      sleep(Duration(milliseconds:250));
+                                      sleep(Duration(milliseconds: 250));
                                       setState(() {
                                         widget.content.numDislike += 1;
                                         widget.content.numLike -= 1;
@@ -231,9 +268,12 @@ class _NewsView extends State<NewsView> {
                                   } else {
                                     //if not liked before
                                     await db
-                                        .dislikeCountOperationsById(userClass.userId, widget.content.newsId, 1)
+                                        .dislikeCountOperationsById(
+                                            userClass.userId,
+                                            widget.content.newsId,
+                                            1)
                                         .then((data) {
-                                      sleep(Duration(milliseconds:250));
+                                      sleep(Duration(milliseconds: 250));
                                       setState(() {
                                         widget.content.numDislike += 1;
                                       });
@@ -245,12 +285,14 @@ class _NewsView extends State<NewsView> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text("You must be signed in to leave a dislike"),
+                                        title: Text(
+                                            "You must be signed in to leave a dislike"),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
                                               auth.signOut();
-                                              Navigator.pushNamed(context, '/login');
+                                              Navigator.pushNamed(
+                                                  context, '/login');
                                             },
                                             child: Text(
                                               'Get me to the login page',
@@ -264,7 +306,8 @@ class _NewsView extends State<NewsView> {
                             },
                             child: Icon(
                               Icons.thumb_down,
-                              color: userClass.dislikedNews!.contains(widget.content.newsId)
+                              color: userClass.dislikedNews!
+                                      .contains(widget.content.newsId)
                                   ? Color(0xff7d060a)
                                   : Color(0x8f7d060a),
                               size: 40,
@@ -293,21 +336,25 @@ class _NewsView extends State<NewsView> {
                           return FutureBuilder(
                               future: db.getUser(comments[index].userId),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.done) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
                                   Users user = snapshot.data! as Users;
                                   if (user.isActive) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
                                               user.image!.isEmpty
                                                   ? ClipOval(
                                                       child: Icon(
-                                                        Icons.image_not_supported,
+                                                        Icons
+                                                            .image_not_supported,
                                                         size: 40,
                                                       ),
                                                     )
@@ -380,8 +427,15 @@ class _NewsView extends State<NewsView> {
                           child: Text("Comment"),
                           onPressed: () async {
                             if (!isAnon) {
-                              await db.addComment(comment, widget.content.newsId, userClass.userId, false);
-                              await db.getComments(comments, widget.content.newsId, false).then((data) {
+                              await db.addComment(
+                                  comment,
+                                  widget.content.newsId,
+                                  userClass.userId,
+                                  false);
+                              await db
+                                  .getComments(
+                                      comments, widget.content.newsId, false)
+                                  .then((data) {
                                 setState(() {
                                   this.comments = comments;
                                 });
@@ -392,12 +446,14 @@ class _NewsView extends State<NewsView> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text("You must be signed in to leave a comment"),
+                                      title: Text(
+                                          "You must be signed in to leave a comment"),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             auth.signOut();
-                                            Navigator.pushNamed(context, '/login');
+                                            Navigator.pushNamed(
+                                                context, '/login');
                                           },
                                           child: Text(
                                             'Get me to the login page',

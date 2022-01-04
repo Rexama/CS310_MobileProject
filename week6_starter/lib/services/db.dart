@@ -13,6 +13,7 @@ class DBService {
   Future addUserAutoID(String username, String mail, String token) async {
     List<String> strList = [];
     List<String> strListt = [];
+    List<String> strListtt = [];
     var uuid = Uuid();
     final String userId = uuid.v4();
     userCollection
@@ -35,6 +36,7 @@ class DBService {
           'numSports': 0,
           'numHist': 0,
           'numMagazine': 0,
+          'visitedNews': strListtt
         })
         .then((value) => print('User added'))
         .catchError((error) => print('Error: ${error.toString()}'));
@@ -251,11 +253,11 @@ class DBService {
         'commentId': commentId,
       };
     }
-      firestoreInstance
-          .collection("comment")
-          .add(data)
-          .then((value) => print('User added'))
-          .catchError((error) => print('Error: ${error.toString()}'));
+    firestoreInstance
+        .collection("comment")
+        .add(data)
+        .then((value) => print('User added'))
+        .catchError((error) => print('Error: ${error.toString()}'));
   }
 
   Future<DateTime>? lastBlogDate(String userID) async {
@@ -306,7 +308,7 @@ class DBService {
   _updateAllFromCollection(CollectionReference collection, String docName,
       String fieldName, String newsId, FieldValue val) async {
     DocumentReference docRef;
-
+    print("update");
     var response = await collection.where(docName, isEqualTo: newsId).get();
     var batch = FirebaseFirestore.instance.batch();
     response.docs.forEach((doc) {
@@ -347,6 +349,23 @@ class DBService {
       _updateAllFromCollection(firestoreInstance.collection("users"), "userId",
           "likedNews", userId, FieldValue.arrayRemove([newsId]));
     }
+  }
+
+  Future newArticleReading(
+      List<String> categories, String userID, String newsId) async {
+    _updateAllFromCollection(firestoreInstance.collection("users"), "userId",
+        "numOfArticles", userID, FieldValue.increment(1));
+
+    print("1");
+    categories.forEach((element) {
+      _updateAllFromCollection(firestoreInstance.collection("users"), "userId",
+          "num" + element, userID, FieldValue.increment(1));
+    });
+    print("2");
+    _updateAllFromCollection(firestoreInstance.collection("users"), "userId",
+        "visitedNews", userID, FieldValue.arrayUnion([newsId]));
+
+    print("3");
   }
 
   Future getBlogsById(String userId, List<Blog> blogsById) async {
