@@ -75,7 +75,8 @@ class _BlogFeedView extends State<BlogFeedView> {
             ),
             body: Padding(
               padding: Dimen.regularPadding,
-              child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Expanded(
                   child: allBlogs.isEmpty
                       ? Container()
@@ -88,11 +89,10 @@ class _BlogFeedView extends State<BlogFeedView> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlogView(
-                                                analytics: widget.analytics,
-                                                observer: widget.observer,
-                                                content: allBlogs[index]),
+                                        builder: (context) => BlogView(
+                                            analytics: widget.analytics,
+                                            observer: widget.observer,
+                                            content: allBlogs[index]),
                                       ),
                                     );
                                   },
@@ -107,16 +107,20 @@ class _BlogFeedView extends State<BlogFeedView> {
                                             Center(
                                               child: Padding(
                                                   padding: EdgeInsets.all(10),
-                                                  child: allBlogs[index].image!.isEmpty
+                                                  child: allBlogs[index]
+                                                          .image!
+                                                          .isEmpty
                                                       ? Icon(
-                                                    Icons.image_not_supported,
-                                                    size: 75,
-                                                  )
+                                                          Icons
+                                                              .image_not_supported,
+                                                          size: 75,
+                                                        )
                                                       : Image.network(
-                                                    allBlogs[index].image as String,
-                                                    width: 75,
-                                                    height: 75,
-                                                  )),
+                                                          allBlogs[index].image
+                                                              as String,
+                                                          width: 75,
+                                                          height: 75,
+                                                        )),
                                             ),
                                             Expanded(
                                               child: Container(
@@ -130,31 +134,58 @@ class _BlogFeedView extends State<BlogFeedView> {
                                                       dense: true,
                                                       //contentPadding: EdgeInsets.only(left: 20.0, right: 5.0),
                                                       contentPadding:
-                                                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 5.0),
                                                       title: Text(
-                                                        allBlogs[index].title.length > 20
-                                                            ? allBlogs[index].title.substring(0, 18) + '..'
-                                                            : allBlogs[index].title,
+                                                        allBlogs[index]
+                                                                    .title
+                                                                    .length >
+                                                                20
+                                                            ? allBlogs[index]
+                                                                    .title
+                                                                    .substring(
+                                                                        0, 18) +
+                                                                '..'
+                                                            : allBlogs[index]
+                                                                .title,
                                                         style: newsTextBoldDark,
                                                       ),
                                                       subtitle: Text(
-                                                        allBlogs[index].content.length > 125
-                                                            ? allBlogs[index].content.substring(0, 80) + '...'
-                                                            : allBlogs[index].content,
-                                                        style: GoogleFonts.robotoSlab(
-                                                          color: AppColors.darkestBlue,
+                                                        allBlogs[index]
+                                                                    .content
+                                                                    .length >
+                                                                125
+                                                            ? allBlogs[index]
+                                                                    .content
+                                                                    .substring(
+                                                                        0, 80) +
+                                                                '...'
+                                                            : allBlogs[index]
+                                                                .content,
+                                                        style: GoogleFonts
+                                                            .robotoSlab(
+                                                          color: AppColors
+                                                              .darkestBlue,
                                                           fontSize: 15.0,
                                                         ),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
                                                       children: [
                                                         Text(
-                                                          DateFormat().format(allBlogs[index].uploadDate).toString(),
-                                                          style: GoogleFonts.robotoSlab(
-                                                            color: AppColors.darkBlue,
+                                                          DateFormat()
+                                                              .format(allBlogs[
+                                                                      index]
+                                                                  .uploadDate)
+                                                              .toString(),
+                                                          style: GoogleFonts
+                                                              .robotoSlab(
+                                                            color: AppColors
+                                                                .darkBlue,
                                                             fontSize: 12.0,
                                                           ),
                                                         ),
