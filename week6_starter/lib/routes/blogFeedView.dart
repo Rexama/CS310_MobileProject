@@ -19,7 +19,9 @@ import 'package:intl/intl.dart';
 
 class BlogFeedView extends StatefulWidget {
   @override
-  const BlogFeedView({Key? key, required this.analytics, required this.observer}) : super(key: key);
+  const BlogFeedView(
+      {Key? key, required this.analytics, required this.observer})
+      : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
