@@ -36,7 +36,6 @@ class _EditProfileViewState extends State<EditProfileView> {
   String _username = "";
   String _mail = "";
   String? _bio = "";
-  String pass = "";
 
   @override
   Widget build(BuildContext context) {

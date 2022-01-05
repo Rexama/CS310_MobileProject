@@ -219,7 +219,16 @@ class DBService {
       'userBio': userBio,
       'email': email,
     });
-    print("Updated");
+    print("Profile Updated");
+  }
+
+  Future updateImage(
+      String imageURL, String token) async {
+    print(imageURL);
+    firestoreInstance.collection("users").doc(token).update({
+      'image': imageURL,
+    });
+    print("Image Updated");
   }
 
   Future makeAccountPrivate(String token, bool isPrivate) async {
