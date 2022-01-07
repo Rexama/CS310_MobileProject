@@ -4,6 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:week6_starter/routes/OwnBlogFeed.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/models/Users.dart';
@@ -14,6 +15,8 @@ import 'package:week6_starter/utils/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:week6_starter/routes/editProfileView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'likedNewsView.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key, required this.analytics, required this.observer}) : super(key: key);
@@ -99,7 +102,14 @@ class _ProfileViewState extends State<ProfileView> {
                                     color: AppColors.midBlue,
                                   ),
                                   child: OutlinedButton(
-                                    onPressed: () async {},
+                                    onPressed: () async {
+                                      print("PUSHED");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => LikedNews(userId: userClass.userId, observer: widget.observer, analytics: widget.analytics,),
+                                          ));
+                                    },
                                     child: Center(
                                       child: Text(
                                         "Favourites",
@@ -119,7 +129,14 @@ class _ProfileViewState extends State<ProfileView> {
                                     color: AppColors.midBlue,
                                   ),
                                   child: OutlinedButton(
-                                    onPressed: () async {},
+                                    onPressed: () async {
+                                      print("PUSHED");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => OwnBlogFeedView(userId: userClass.userId, observer: widget.observer, analytics: widget.analytics,),
+                                          ));
+                                    },
                                     child: Center(
                                       child: Text(
                                         "My Posts",

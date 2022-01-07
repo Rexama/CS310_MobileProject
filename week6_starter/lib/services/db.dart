@@ -392,17 +392,49 @@ class DBService {
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future getLikedItemIds(String userId, List<String> newsIds) async {
-    firestoreInstance
+  Future<List<String>> getLikedItemIds(String userID) async {
+    List<String> likedNews = [];
+    await firestoreInstance
+        .collection("users")
+        .where('userId', isEqualTo: userID)
+        .get()
+        .then((querySnapshot) {
+      Users temp = Users.fromJson(querySnapshot.docs.first.data());
+      likedNews = temp.likedNews!;
+    }).catchError((error) => print('Error: ${error.toString()}'));
+    return likedNews;
+  }
+
+  /* Future<String> getLikedItemIds(String userId) async {
+    await firestoreInstance
         .collection("Users")
         .where('userId', isEqualTo: userId)
         .get()
         .then((querySnapshot) {
           querySnapshot.docs.forEach((result) {
-            newsIds = Users.fromJson(result.data()).likedNews!;
+            print(Users.fromJson(result.data()).likedNews!);
+            return Users.fromJson(result.data()).likedNews!;
           });
         })
         .then((value) => print(newsIds))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
+  *\
+
+   */
+  Future getNewsById(String newsId, News newsById) async{
+    firestoreInstance
+        .collection("news")
+        .where('newsId', isEqualTo: newsId)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        News tempNew = News.fromJson(result.data());
+        newsById = tempNew;
+      });
+    })
+        .then((value) => print(newsById.image as String))
+        .catchError((error) => print('Error: ${error.toString()}'));
+  }
+
 }
