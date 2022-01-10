@@ -43,6 +43,11 @@ class _ProfileViewState extends State<ProfileView> {
           if (snapshot.connectionState == ConnectionState.done) {
             Users userClass = Users.fromJson(snapshot.data!.data() as Map<String, dynamic>);
             return Scaffold(
+              backgroundColor: Colors.white24,
+              appBar: AppBar(
+                backgroundColor: AppColors.darkBlue,
+                automaticallyImplyLeading: false,
+              ),
               body: ListView(
                 physics: BouncingScrollPhysics(),
                 children: [
