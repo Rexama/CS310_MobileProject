@@ -44,6 +44,8 @@ class _NewsView extends State<NewsView> {
 
   //late Future _future = db.getComments(comments, widget.content.newsId, false);
   String comment = "";
+  List<News> allNews = [];
+  List<News> relatedNews = [];
   bool isAnon = false;
 
   @override
@@ -53,6 +55,14 @@ class _NewsView extends State<NewsView> {
         this.comments = comments;
       });
     });
+
+    db.getRelNews(relatedNews, widget.content.category, widget.content.newsId).then((data)
+        {
+          setState(() {
+            this.relatedNews = relatedNews;
+          });
+        });
+
     super.initState();
   }
 
@@ -465,6 +475,25 @@ class _NewsView extends State<NewsView> {
                                   });
                             }
                           }),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "Related News",
+                        style: GoogleFonts.robotoSlab(
+                          color: AppColors.darkestBlue,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        )
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+
+                        ],
+                      )
                     ],
                   )
                 ],

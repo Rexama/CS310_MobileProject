@@ -49,8 +49,101 @@ class _ChangePassState extends State<ChangePass> {
     count = 0;
   }
 
-  Future<void> changePassword(String mail, String oldpass, String newPass) async
+  Future<void> changePassword1(String mail, String oldpass, String newPass) async
   {
+    var res = await auth.updatePass(newPass, mail, oldpass);
+
+    print("RES: " + res.toString());
+    if(res == "1")
+      {
+        print("passChange res should be 1");
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Password change success"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/profileView');
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                ],
+              );
+            });
+      }
+    else if(res == "3")
+      {
+        print("passChange res should be 3");
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Please check your email and password and try again."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/profileView');
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                ],
+              );
+            });
+      }
+    else
+      {
+        print("passChange res should be else");
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("An error has occurred please try again."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/profileView');
+                    },
+                    child: Text(
+                      'OK',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                ],
+              );
+            });
+      }
+    /*showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Password change success"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/profileView');
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(fontSize: 20),
+                ),
+              )
+            ],
+          );
+        });*/
+
+  }
+
+  /*Future<void> changePassword(String mail, String oldpass, String newPass) async
+  {
+    print("mail: " + mail + "oldpass: "+ oldpass + "newpass: " + newPass);
     var res = auth.loginWithMailAndPass(mail, oldpass);
     bool flag = true;
     print("res print:" + res.toString());
@@ -66,10 +159,53 @@ class _ChangePassState extends State<ChangePass> {
     }
     if(flag)
       {
-        auth.updatePass(newPass);
+        var res = auth.updatePass(newPass);
+        print("CHANGEPASS RES: " + res.toString());
+        if(res == "1")
+          {
+            print("Change Password Success");
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Password change success"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/profileView');
+                        },
+                        child: Text(
+                          'OK',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      )
+                    ],
+                  );
+                });
+          } else {
+          print("Change Password Error");
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Please check your password and email and try again"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/profileView');
+                      },
+                      child: Text(
+                        'OK',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    )
+                  ],
+                );
+              });
+        }
       }
 
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +269,7 @@ class _ChangePassState extends State<ChangePass> {
                         },
                         onSaved: (value) {
                           if (value != null) {
-                            mail = value;
+                            this.mail = value;
                           }
                         },
                       ),
@@ -271,8 +407,9 @@ class _ChangePassState extends State<ChangePass> {
                           return null;
                         },
                         onSaved: (value) {
-                          if (value != null) {
+                          if (value != null && value == this.tempPass) {
                             newPass = value;
+                            print("newpass: "+newPass);
                           }
                         },
                       ),
@@ -288,7 +425,24 @@ class _ChangePassState extends State<ChangePass> {
                   children: <Widget>[
                     OutlinedButton(
                       onPressed: () {
-                        changePassword(mail, oldPass, newPass);
+                        if (_formKey.currentState!.validate()) {
+                          print('Mail: ' +
+                              mail +
+                              "\noldPass: " +
+                              oldPass
+                          + "\nnewpass: " + newPass);
+                          _formKey.currentState!.save();
+                          print('Mail: ' +
+                              mail +
+                              "\noldPass: " +
+                              oldPass
+                              + "\nnewpass: " + newPass);
+                          changePassword1(mail, oldPass, newPass);
+                          setState(() {
+                            count += 1;
+                          });
+                        }
+
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),

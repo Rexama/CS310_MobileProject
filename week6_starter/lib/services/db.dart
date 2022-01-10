@@ -168,13 +168,35 @@ class DBService {
 
         for (int i = 0; i < tempNew.category.length; i++) {
           if (tempNew.category[i] == cat) {
-            print(tempNew.category[i].toString());
             allNews.add(tempNew);
           }
         }
       });
     });
     return allNews;
+  }
+
+  Future getRelNews(List<News> relatedNews, List<String> cats, String id) async {
+    relatedNews.clear();
+
+    print(cats[0]);
+    print(cats[1]);
+    firestoreInstance
+        .collection("news")
+        .where("category", arrayContainsAny: cats)
+        //.where("newsId", isNotEqualTo: id)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((result) {
+        News tempNew = News.fromJson(result.data());
+        if(tempNew.newsId != id)
+          {
+            relatedNews.add(tempNew);
+            print("relatednews: " + tempNew.title);
+          }
+      });
+    });
+    return relatedNews;
   }
 
   /*Future getComments(List<Comment> comments) async {

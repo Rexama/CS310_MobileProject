@@ -89,15 +89,41 @@ class AuthService {
     }
   }
 
-  Future updatePass(String newPass) async
+  Future updatePass(String newPass, String mail, String oldPass) async
   {
-    print("newPass: " + newPass);
+    print("mail is: "+mail + "\noldpass is: " + oldPass + "\nnewpass is: " + newPass);
+// Create a credential
+    AuthCredential credential = EmailAuthProvider.credential(email: mail, password: oldPass);
+
+// Reauthenticate
+
+
+
     try{
-      var a = _auth.currentUser!.updatePassword(newPass);
-      print("UPDATE PASS RES: "+ a.toString());
+      var credRes = await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
+
+      await _auth.currentUser!.updatePassword(newPass);
+      print("UPDATE PASS RES: "+ "1 SUCCESS");
+      return ("1");
     }
-    catch(e){
-      print("PASSWORDUPDATE ERROR: "+ e.toString());
+    on FirebaseAuthException catch (e){
+      print(e.code.toString());
+      if(e.code.toString() == 'user-not-found' || e.code.toString() == 'wrong-password')
+        {
+          return ("3");
+        }
+      else if (e.code.toString() == 'weak-password' || e.code.toString() == 'requires-recent-login') {
+        //signupWithMailAndPass(mail, pass);
+        return ("3");
+      } else if (e.code.toString() == 'too-many-requests') {
+        return ("4");
+      }
+      else {
+        return("3");
+      }
+    } catch (e) {
+      print(e.toString());
+      return ("4");
     }
   }
 
