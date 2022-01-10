@@ -214,15 +214,16 @@ class _BlogFeedView extends State<BlogFeedView> {
                 Icons.create,
                 color: AppColors.whiteBlue,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (!user.isAnonymous) {
+                  Users blogOwner = await db.getUserByUid(user.uid) as Users;
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => PostBlogFeedView(
                                 analytics: widget.analytics,
                                 observer: widget.observer,
-                                userId: user.uid,
+                                userId: blogOwner.userId,
                               )));
                 } else {
                   showDialog(

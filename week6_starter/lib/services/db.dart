@@ -7,7 +7,7 @@ import 'package:week6_starter/models/Users.dart';
 
 class DBService {
   final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  FirebaseFirestore.instance.collection('users');
   final firestoreInstance = FirebaseFirestore.instance;
 
   Future addUserAutoID(String username, String mail, String token) async {
@@ -19,25 +19,25 @@ class DBService {
     userCollection
         .doc(token)
         .set({
-          'userId': userId,
-          'username': username,
-          'userToken': token,
-          'email': mail,
-          'isActive': true,
-          'isPriv': false,
-          'image':
-              "https://www.tutorsvalley.com/public/storage/uploads/tutor/1574383712-1AB5217C-5A13-4888-A5A1-BE0BCADBC655.png",
-          'userBio': "",
-          'numOfArticles': 0,
-          'likedNews': strList,
-          'dislikedNews': strListt,
-          'numScience': 0,
-          'numFinance': 0,
-          'numSports': 0,
-          'numHist': 0,
-          'numMagazine': 0,
-          'visitedNews': strListtt
-        })
+      'userId': userId,
+      'username': username,
+      'userToken': token,
+      'email': mail,
+      'isActive': true,
+      'isPriv': false,
+      'image':
+      "https://www.tutorsvalley.com/public/storage/uploads/tutor/1574383712-1AB5217C-5A13-4888-A5A1-BE0BCADBC655.png",
+      'userBio': "",
+      'numOfArticles': 0,
+      'likedNews': strList,
+      'dislikedNews': strListt,
+      'numScience': 0,
+      'numFinance': 0,
+      'numSports': 0,
+      'numHist': 0,
+      'numMagazine': 0,
+      'visitedNews': strListtt
+    })
         .then((value) => print('User added'))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
@@ -136,6 +136,19 @@ class DBService {
     return user;
   }
 
+  Future<Users?> getUserByUid(String userID) async {
+    Users? user = null;
+    await firestoreInstance
+        .collection("users")
+        .where('userToken', isEqualTo: userID)
+        .get()
+        .then((querySnapshot) {
+      user = Users.fromJson(querySnapshot.docs.first.data());
+      print("I received that user from database: " + user!.userName);
+    }).catchError((error) => print('Error: ${error.toString()}'));
+    return user;
+  }
+
   Future getNews(List<News> allNews) async {
     firestoreInstance.collection("news").get().then((querySnapshot) {
       querySnapshot.docs.forEach((result) {
@@ -203,17 +216,17 @@ class DBService {
         .collection("blog")
         .get()
         .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) {
-            Blog tempBlog = Blog.fromJson(result.data());
-            allBlogs.add(tempBlog);
-          });
-        })
+      querySnapshot.docs.forEach((result) {
+        Blog tempBlog = Blog.fromJson(result.data());
+        allBlogs.add(tempBlog);
+      });
+    })
         .then((value) => print(allBlogs[0].image as String))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
 
-  Future updateProfile(
-      String username, String userBio, String email, String token) async {
+  Future updateProfile(String username, String userBio, String email,
+      String token) async {
     firestoreInstance.collection("users").doc(token).update({
       'username': username,
       'userBio': userBio,
@@ -222,8 +235,7 @@ class DBService {
     print("Profile Updated");
   }
 
-  Future updateImage(
-      String imageURL, String token) async {
+  Future updateImage(String imageURL, String token) async {
     print(imageURL);
     firestoreInstance.collection("users").doc(token).update({
       'image': imageURL,
@@ -238,8 +250,8 @@ class DBService {
     print("Updated");
   }
 
-  Future addComment(
-      String comment, String id, String userId, bool isBlog) async {
+  Future addComment(String comment, String id, String userId,
+      bool isBlog) async {
     var data;
     var uuid = Uuid();
     final String commentId = uuid.v4();
@@ -332,8 +344,8 @@ class DBService {
     });
   }
 
-  Future likeCountOperationsById(
-      String userId, String newsId, int count) async {
+  Future likeCountOperationsById(String userId, String newsId,
+      int count) async {
     _updateAllFromCollection(firestoreInstance.collection("news"), "newsId",
         "numLike", newsId, FieldValue.increment(count));
 
@@ -346,8 +358,8 @@ class DBService {
     }
   }
 
-  Future dislikeCountOperationsById(
-      String userId, String newsId, int count) async {
+  Future dislikeCountOperationsById(String userId, String newsId,
+      int count) async {
     _updateAllFromCollection(firestoreInstance.collection("news"), "newsId",
         "numDislike", newsId, FieldValue.increment(count));
 
@@ -360,8 +372,8 @@ class DBService {
     }
   }
 
-  Future newArticleReading(
-      List<String> categories, String userID, String newsId) async {
+  Future newArticleReading(List<String> categories, String userID,
+      String newsId) async {
     _updateAllFromCollection(firestoreInstance.collection("users"), "userId",
         "numOfArticles", userID, FieldValue.increment(1));
 
@@ -383,11 +395,11 @@ class DBService {
         .where('userId', isEqualTo: userId)
         .get()
         .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) {
-            Blog tempBlog = Blog.fromJson(result.data());
-            blogsById.add(tempBlog);
-          });
-        })
+      querySnapshot.docs.forEach((result) {
+        Blog tempBlog = Blog.fromJson(result.data());
+        blogsById.add(tempBlog);
+      });
+    })
         .then((value) => print(blogsById[0].image as String))
         .catchError((error) => print('Error: ${error.toString()}'));
   }
@@ -405,36 +417,17 @@ class DBService {
     return likedNews;
   }
 
-  /* Future<String> getLikedItemIds(String userId) async {
-    await firestoreInstance
-        .collection("Users")
-        .where('userId', isEqualTo: userId)
-        .get()
-        .then((querySnapshot) {
-          querySnapshot.docs.forEach((result) {
-            print(Users.fromJson(result.data()).likedNews!);
-            return Users.fromJson(result.data()).likedNews!;
-          });
-        })
-        .then((value) => print(newsIds))
-        .catchError((error) => print('Error: ${error.toString()}'));
-  }
-  *\
 
-   */
-  Future getNewsById(String newsId, News newsById) async{
-    firestoreInstance
+  Future<News> getNewsById(String newsId) async {
+    var x;
+    await firestoreInstance
         .collection("news")
         .where('newsId', isEqualTo: newsId)
         .get()
         .then((querySnapshot) {
-      querySnapshot.docs.forEach((result) {
-        News tempNew = News.fromJson(result.data());
-        newsById = tempNew;
-      });
-    })
-        .then((value) => print(newsById.image as String))
-        .catchError((error) => print('Error: ${error.toString()}'));
+      x = News.fromJson(querySnapshot.docs.first.data());
+    }).catchError((error) => print('Error: ${error.toString()}'));
+    return x;
   }
-
 }
+

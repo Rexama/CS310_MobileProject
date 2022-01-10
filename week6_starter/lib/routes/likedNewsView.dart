@@ -33,15 +33,23 @@ class _LikedNews extends State<LikedNews> {
   DBService db = DBService();
   List<String> likedNewsIds = [];
   List<News> likedNewsToUse = [];
-  late News tempNew;
-  late Timer _timer;
+  News? tempNew;
 
   int currentIndex = 0;
 
   @override
   void initState() {
     print(widget.userId);
-    db.getLikedItemIds(widget.userId).then((data) {
+    getItems();
+    print("likedNewsIds");
+    print(likedNewsIds);
+
+    super.initState();
+    }
+
+
+  getItems() async {
+    await db.getLikedItemIds(widget.userId).then((data) {
       setState(() {
         print(data);
         this.likedNewsIds = data;
@@ -49,27 +57,16 @@ class _LikedNews extends State<LikedNews> {
         print(likedNewsIds);
       });
     });
-
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
-    print("likedNewsIds");
+    print("pushitems");
     print(likedNewsIds);
-    sleep(Duration(milliseconds: 250));
     for(var elem in likedNewsIds){
-      db.getNewsById(elem, tempNew).then((data) {
+      await db.getNewsById(elem).then((data) {
         setState(() {
-          this.tempNew = tempNew;
+          this.tempNew = data;
         });
-        likedNewsToUse.add(tempNew);
+        likedNewsToUse.add(tempNew!);
       });
     }
-    super.initState();
-    }
-
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   @override
