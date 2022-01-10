@@ -61,15 +61,8 @@ class _OwnBlogFeedView extends State<OwnBlogFeedView> {
             //setState(() {});
           }
           return Scaffold(
-            backgroundColor: Colors.white24,
             appBar: AppBar(
               backgroundColor: AppColors.darkBlue,
-              leading: IconButton(
-                onPressed: () {
-                  auth.signOut();
-                },
-                icon: Icon(Icons.logout),
-              ),
               actions: [
                 IconButton(
                   onPressed: () {

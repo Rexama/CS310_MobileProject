@@ -47,6 +47,7 @@ class _NewsView extends State<NewsView> {
   List<News> allNews = [];
   List<News> relatedNews = [];
   bool isAnon = false;
+  //late Future _future = db.getRelNews(relatedNews);
 
   @override
   void initState() {
@@ -478,22 +479,142 @@ class _NewsView extends State<NewsView> {
                       SizedBox(
                         height: 16,
                       ),
-                      Text(
-                        "Related News",
-                        style: GoogleFonts.robotoSlab(
-                          color: AppColors.darkestBlue,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                        )
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Related News",
+                          style: GoogleFonts.robotoSlab(
+                            color: AppColors.darkestBlue,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                          )
+                        ),
                       ),
-                      SizedBox(
-                        height: 8,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: relatedNews.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NewsView(
+                                        analytics: widget.analytics,
+                                        observer: widget.observer,
+                                        content: relatedNews[index]),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 200,
+                                child: Card(
+                                  child: Container(
+                                    height: 200,
+                                    color: Colors.white,
+                                    child: Row(
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: relatedNews[index].image == null
+                                                  ? Icon(
+                                                Icons.image_not_supported,
+                                                size: 75,
+                                              )
+                                                  : Image.network(
+                                                relatedNews[index].image as String,
+                                                width: 75,
+                                                height: 75,
+                                              )),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: Column(
+                                              children: [
+                                                ListTile(
+                                                  title: Text(
+                                                    relatedNews[index].title.length > 20
+                                                        ? relatedNews[index]
+                                                        .title
+                                                        .substring(0, 18) +
+                                                        '..'
+                                                        : relatedNews[index].title,
+                                                    style: newsTextBoldDark,
+                                                  ),
+                                                  subtitle: Text(
+                                                    relatedNews[index].subtitle.length >
+                                                        125
+                                                        ? relatedNews[index]
+                                                        .subtitle
+                                                        .substring(0, 90) +
+                                                        '...'
+                                                        : relatedNews[index].subtitle,
+                                                    style: GoogleFonts.robotoSlab(
+                                                      color: AppColors.darkestBlue,
+                                                      fontSize: 15.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.thumb_up,
+                                                      color: Color(0xff1b6609),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      relatedNews[index]
+                                                          .numLike
+                                                          .toString(),
+                                                      style: GoogleFonts.robotoSlab(
+                                                        color: AppColors.darkBlue,
+                                                        fontSize: 15.0,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Icon(
+                                                      Icons.thumb_down,
+                                                      color: Color(0xff7d060a),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      relatedNews[index]
+                                                          .numDislike
+                                                          .toString(),
+                                                      style: GoogleFonts.robotoSlab(
+                                                        color: AppColors.darkBlue,
+                                                        fontSize: 15.0,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  elevation: 3,
+                                  margin: EdgeInsets.all(15),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                      Row(
-                        children: [
-
-                        ],
-                      )
                     ],
                   )
                 ],

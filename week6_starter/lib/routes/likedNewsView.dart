@@ -75,12 +75,6 @@ class _LikedNews extends State<LikedNews> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.darkBlue,
-        leading: IconButton(
-          onPressed: () {
-            auth.signOut();
-          },
-          icon: Icon(Icons.logout),
-        ),
         actions: [
           IconButton(
             onPressed: () {
