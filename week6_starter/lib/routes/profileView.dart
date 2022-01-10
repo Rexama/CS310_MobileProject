@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:week6_starter/routes/OwnBlogFeed.dart';
+import 'package:week6_starter/routes/profileViewCounts.dart';
 import 'package:week6_starter/services/auth.dart';
 import 'package:week6_starter/services/db.dart';
 import 'package:week6_starter/models/Users.dart';
@@ -156,7 +157,15 @@ class _ProfileViewState extends State<ProfileView> {
                                     color: AppColors.midBlue,
                                   ),
                                   child: OutlinedButton(
-                                    onPressed: () async {},
+                                    onPressed: () async {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProfileViewCounts(observer: widget.observer, analytics: widget.analytics,
+                                              numOfArticles: userClass.numOfArticles, numHist: userClass.numHist, numFinance: userClass.numFinance,
+                                            numMagazine: userClass.numMagazine, numScience: userClass.numScience, numSports: userClass.numSports),
+                                          ));
+                                    },
                                     child: Center(
                                       child: Text(
                                         "Read Counts",
