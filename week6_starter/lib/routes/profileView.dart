@@ -109,12 +109,21 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () async {
-                                      print("PUSHED");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => LikedNews(userId: userClass.userId, observer: widget.observer, analytics: widget.analytics,),
-                                          ));
+                                      if (user.isAnonymous) {
+                                      return;
+                                      } else {
+                                        print("PUSHED");
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LikedNews(
+                                                    userId: userClass.userId,
+                                                    observer: widget.observer,
+                                                    analytics: widget
+                                                        .analytics,),
+                                            ));
+                                      }
                                     },
                                     child: Center(
                                       child: Text(
@@ -136,12 +145,21 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () async {
-                                      print("PUSHED");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OwnBlogFeedView(userId: userClass.userId, observer: widget.observer, analytics: widget.analytics,),
-                                          ));
+                                      if (user.isAnonymous) {
+                                      return;
+                                      } else {
+                                        print("PUSHED");
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OwnBlogFeedView(
+                                                    userId: userClass.userId,
+                                                    observer: widget.observer,
+                                                    analytics: widget
+                                                        .analytics,),
+                                            ));
+                                      }
                                     },
                                     child: Center(
                                       child: Text(
@@ -163,13 +181,31 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () async {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ProfileViewCounts(observer: widget.observer, analytics: widget.analytics,
-                                              numOfArticles: userClass.numOfArticles, numHist: userClass.numHist, numFinance: userClass.numFinance,
-                                            numMagazine: userClass.numMagazine, numScience: userClass.numScience, numSports: userClass.numSports),
-                                          ));
+                                      if (user.isAnonymous) {
+                                      return;
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileViewCounts(
+                                                      observer: widget.observer,
+                                                      analytics: widget
+                                                          .analytics,
+                                                      numOfArticles: userClass
+                                                          .numOfArticles,
+                                                      numHist: userClass
+                                                          .numHist,
+                                                      numFinance: userClass
+                                                          .numFinance,
+                                                      numMagazine: userClass
+                                                          .numMagazine,
+                                                      numScience: userClass
+                                                          .numScience,
+                                                      numSports: userClass
+                                                          .numSports),
+                                            ));
+                                      }
                                     },
                                     child: Center(
                                       child: Text(
@@ -193,8 +229,14 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () async {
-                                      db.makeAccountPrivate(userClass.userToken, !userClass.isPriv);
-                                      setState(() {});
+                                      if (user.isAnonymous) {
+                                      return;
+                                      } else {
+                                        db.makeAccountPrivate(
+                                            userClass.userToken,
+                                            !userClass.isPriv);
+                                        setState(() {});
+                                      }
                                     },
                                     child: Center(
                                       child: Text(
@@ -242,35 +284,55 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   child: OutlinedButton(
                                     onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Which action do you want to perform?"),
-                                            actions: [
-                                              TextButton(
-                                                child: Text("Delete Account", style: GoogleFonts.nunito(
-                                                    color: Color(0xFFA01B10), fontWeight: FontWeight.bold, fontSize: 20),),
-                                                onPressed: () async {
-                                                  print("userclass userId: " + userClass.userId);
-                                                  await db.deleteUser(userClass.userId);
-                                                  await auth.deleteUser();
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text("Deactivate Account", style: GoogleFonts.nunito(
-                                                    color: Color(0xFF0B4BAD), fontWeight: FontWeight.bold, fontSize: 20),),
-                                                onPressed: () async {
-                                                  await db.deactivateUser(userClass.userId, false);
-                                                  await auth.signOut();
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                      if (user.isAnonymous) {
+                                      return;
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  "Which action do you want to perform?"),
+                                              actions: [
+                                                TextButton(
+                                                  child: Text("Delete Account",
+                                                    style: GoogleFonts.nunito(
+                                                        color: Color(
+                                                            0xFFA01B10),
+                                                        fontWeight: FontWeight
+                                                            .bold,
+                                                        fontSize: 20),),
+                                                  onPressed: () async {
+                                                    print("userclass userId: " +
+                                                        userClass.userId);
+                                                    await db.deleteUser(
+                                                        userClass.userId);
+                                                    await auth.deleteUser();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text(
+                                                    "Deactivate Account",
+                                                    style: GoogleFonts.nunito(
+                                                        color: Color(
+                                                            0xFF0B4BAD),
+                                                        fontWeight: FontWeight
+                                                            .bold,
+                                                        fontSize: 20),),
+                                                  onPressed: () async {
+                                                    await db.deactivateUser(
+                                                        userClass.userId,
+                                                        false);
+                                                    await auth.signOut();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     },
                                     child: Center(
                                       child: Text(
