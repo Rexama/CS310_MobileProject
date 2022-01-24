@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "798303082575",
+    "firebase_url": "https://cs310-newsapp-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "cs310-newsapp",
     "storage_bucket": "cs310-newsapp.appspot.com"
   },
@@ -13,6 +14,30 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "798303082575-1cs3nf6411mqda66anfd8la4hm9v38fj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.week6_starter",
+            "certificate_hash": "9cf388009893037dd4f661164d14a13d13f0f6d2"
+          }
+        },
+        {
+          "client_id": "798303082575-73ueu7gnc5mbhcfgscdl62iokfnhkujm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.week6_starter",
+            "certificate_hash": "67767b980ce9ca10aece583347aaec416eaedb9b"
+          }
+        },
+        {
+          "client_id": "798303082575-kegvbbtqde7aht8r0i7nsplebqinqh3h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.week6_starter",
+            "certificate_hash": "0b8ffa82068fd892894aa1e537e3cb4f5d849f47"
+          }
+        },
         {
           "client_id": "798303082575-00dbip2tnofaomteiiuvbfvcc309ngbq.apps.googleusercontent.com",
           "client_type": 3
